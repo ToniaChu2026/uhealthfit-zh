@@ -223,6 +223,17 @@ h3{font-size:20px;font-weight:700}
 .who .no li::before{content:"—";position:absolute;left:0;color:var(--ink-3)}
 @media(max-width:760px){.who{grid-template-columns:1fr}}
 
+/* 產品頁主題橫幅（花體字，取自官網首頁輪播） */
+.slide{background:var(--slide-bg,var(--green-light));overflow:hidden}
+.slide .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding-top:clamp(40px,6vw,76px);padding-bottom:clamp(40px,6vw,76px)}
+.slide .wrap>div{min-width:0}
+.slide-name{font-size:14px;font-weight:700;letter-spacing:.08em;color:var(--ink-2);font-family:var(--font-en)}
+.slide-title{display:block;width:min(100%,540px);height:auto;margin:16px 0 20px}
+.slide-intro{font-size:clamp(16px,1.6vw,19px);color:var(--ink);max-width:540px;line-height:1.7}
+.slide-herbs{font-size:14px;color:var(--ink-2);margin:10px 0 24px}
+.slide-pic img{width:100%;height:auto;aspect-ratio:3/2;object-fit:contain;filter:drop-shadow(0 30px 40px rgba(8,32,15,.18))}
+@media(max-width:900px){.slide .wrap{grid-template-columns:1fr;gap:16px}.slide-pic{order:-1}.slide-pic img{max-height:320px}}
+
 /* 購買固定列 */
 .buybar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#fff;border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .25s}
 .buybar.show{transform:none}

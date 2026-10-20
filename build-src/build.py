@@ -214,6 +214,35 @@ def price_str(p, with_compare=False):
         return f'{base} <s style="color:var(--ink-3);font-weight:600;font-size:.7em;margin-left:6px">{cs}</s>'
     return base
 
+
+# ───── 產品頁「主題花體字」橫幅：取自 uhealthfit.com/zh-TW 首頁輪播（花體字 SVG、簡介、底色）─────
+SLIDES = {
+ 'eye-patches':      dict(svg='eye-patches',         bg='#D9E2EE', headline='清涼 放鬆／睡飽的雙眼',        intro='日本製冷敷眼貼——休息時貼上，給盯了一整天螢幕的雙眼一份草本呵護。', shot='eye-patches/eye-patches-box-front', avif=False),  # 此圖的 avif 版本沒有透明背景，只用 PNG
+ 'lumiview':         dict(svg='herbalflow-capsules', bg='#D6DEC7', headline='草本濃縮進膠囊／搭配眼貼更完整', intro='七味東方養目草本濃縮成膠囊，從內在支持眼睛的長期健康；搭配眼貼，外內更完整。', shot='lumiview/lumiview-product-shot-wide'),
+ 'eye-cream':        dict(svg='eye-patches-3c',      bg='#F8F2E8', headline='看不見的眼貼／3C 花粉 全呵護',   intro='為脆弱眼周設計的植萃眼霜——不便使用眼貼時的隨身養護。', shot='herbal-soothing-repair-eye-cream/eye-cream-product-shot-wide'),
+ 'dentaforte':       dict(svg='dentaforte',          bg='#F2DCB4', headline='健康牙齦／穩固牙齒',            intro='每日草本膠囊，由內支持牙齦與牙齒——照顧牙刷到不了的深處。', shot='dentaforte/dentaforte-product-shot-wide'),
+ 'calmoon':          dict(svg='calmoon',             bg='#C8D9F3', headline='白天放鬆／夜裡好眠',            intro='草本安神配方——睡前慢慢放鬆，自然入睡。', shot='calmoon/calmoon-product-shot-wide'),
+ 'herbalflow':       dict(svg='herbalflow',          bg='#E4EBDD', headline='通腹順暢自然／不靠刺激',        intro='以火麻仁為核心的草本複方，溫和支持腸道自然節律。', shot='herbalflow/herbalflow-product-shot-wide'),
+ 'soothing-cream':   dict(svg='calming',             bg='#F2DDC6', headline='鎮靜 舒適／更柔軟的肌膚',        intro='不含刺激性活性成分的植萃修護，為乾燥與壓力肌帶來每日的溫和呵護。', shot='herbal-soothing-repair-cream/soothing-repair-cream-product-shot-wide'),
+ 'clarifying-cream': dict(svg='clarifying-cream',    bg='#F6E9D9', headline='為易長痘肌膚／精選的草本',      intro='溫和淨顏的植萃面霜，讓膚色看起來更勻淨、更安定。', shot='herbal-clarifying-cream/clarifying-cream-product-shot-wide'),
+ 'lifting-serum':    dict(svg='lifting-serum',       bg='#D3CFAD', headline='更緊緻 更亮澤／更年輕的肌膚',    intro='高濃度植萃精華，日復一日，見證肌膚的提升與煥亮。', shot='herbal-lifting-revitalizing-serum/lifting-serum-product-shot-wide'),
+ 'enerbalance':      dict(svg='enerbalance',         bg='#ECE4D4', headline='咖啡因短暫提神／不如日日滋養',    intro='真正持久的活力，來自身體整體協調。戒掉咖啡因，不用再靠刺激。', shot='enerbalance/enerbalance-product-shot-wide'),
+}
+def slide_band(slug, p, url):
+    sl = SLIDES.get(slug)
+    if not sl: return ''
+    return f'''<section class="slide" style="--slide-bg:{sl['bg']}" aria-label="{esc(sl['headline'])}"><div class="wrap">
+  <div class="slide-text">
+    <div class="slide-name">WISEQUEST {esc(p['name'].replace('WiseQuest ',''))}</div>
+    <img class="slide-title" src="{IMG}/home/hero-title-{sl['svg']}-zh-hant.svg" alt="{esc(sl['headline'])}" loading="lazy">
+    <p class="slide-intro">{esc(sl['intro'])}</p>
+    <p class="slide-herbs">主要成分：{esc(p['herbs'])}</p>
+    <a class="btn btn-primary ext" data-product="{slug}" href="{url}">立即選購</a>
+  </div>
+  <div class="slide-pic"><picture>{'' if sl.get('avif') is False else f'<source srcset="{IMG}/_optimized/products/{sl["shot"]}-1200.avif" type="image/avif">'}<img src="{IMG}/products/{sl['shot']}.png" alt="{esc(p['name'])}" loading="lazy"></picture></div>
+</div></section>
+'''
+
 def head(title, desc, rel, canonical_path, page_id, og_image=None, extra=''):
     return f'''<!DOCTYPE html>
 <html lang="zh-Hant">
@@ -521,6 +550,7 @@ def build_products():
         yes=''.join(f'<li>{esc(x)}</li>' for x in p['yes']); no=''.join(f'<li>{esc(x)}</li>' for x in p['no'])
         posts=[q for q in POSTS if q['series']==p['series']]
         pr=price_str(p, with_compare=True)
+        slide=slide_band(slug,p,url)
         ld=json.dumps({"@context":"https://schema.org","@type":"Product","name":p['name'],"image":p['image'],"description":p['desc'],"brand":{"@type":"Brand","name":"WiseQuest"},"url":f"{SITE_URL}/products/{slug}.html","offers":{"@type":"Offer","priceCurrency":"USD","price":str(p['price']) if p['price'] else "0","availability":"https://schema.org/OutOfStock" if p.get('oos') else "https://schema.org/InStock","url":url}},ensure_ascii=False) if not p.get('is_bundle') else ''
         body=f'''
 <section class="pdp"><div class="wrap">
@@ -542,7 +572,7 @@ def build_products():
     </div>
   </div>
 </div></section>
-
+{slide}
 <section class="sec bg-cream"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">成分與用法</span><h2>你知道自己每天用的是什麼</h2></div>
   <div class="spec">
