@@ -228,19 +228,33 @@ SLIDES = {
  'lifting-serum':    dict(svg='lifting-serum',       bg='#D3CFAD', headline='更緊緻 更亮澤／更年輕的肌膚',    intro='高濃度植萃精華，日復一日，見證肌膚的提升與煥亮。', shot='herbal-lifting-revitalizing-serum/lifting-serum-product-shot-wide'),
  'enerbalance':      dict(svg='enerbalance',         bg='#ECE4D4', headline='咖啡因短暫提神／不如日日滋養',    intro='真正持久的活力，來自身體整體協調。戒掉咖啡因，不用再靠刺激。', shot='enerbalance/enerbalance-product-shot-wide'),
 }
-def slide_band(slug, p, url):
-    sl = SLIDES.get(slug)
-    if not sl: return ''
-    return f'''<section class="slide" style="--slide-bg:{sl['bg']}" aria-label="{esc(sl['headline'])}"><div class="wrap">
-  <div class="slide-text">
-    <div class="slide-name">WISEQUEST {esc(p['name'].replace('WiseQuest ',''))}</div>
-    <img class="slide-title" src="{IMG}/home/hero-title-{sl['svg']}-zh-hant.svg" alt="{esc(sl['headline'])}" loading="lazy">
-    <p class="slide-intro">{esc(sl['intro'])}</p>
-    <p class="slide-herbs">主要成分：{esc(p['herbs'])}</p>
-    <a class="btn btn-primary ext" data-product="{slug}" href="{url}">立即選購</a>
-  </div>
-  <div class="slide-pic"><picture>{'' if sl.get('avif') is False else f'<source srcset="{IMG}/_optimized/products/{sl["shot"]}-1200.avif" type="image/avif">'}<img src="{IMG}/products/{sl['shot']}.png" alt="{esc(p['name'])}" loading="lazy"></picture></div>
-</div></section>
+def series_slides(k, rel):
+    """系列頁的產品輪播：同官網首頁 slides，電腦版左文右圖，每個產品一張"""
+    s=SERIES[k]; items=[]
+    for slug in s['products']:
+        sl=SLIDES.get(slug); p=PRODUCTS[slug]
+        if not sl: continue
+        avif='' if sl.get('avif') is False else f'<source srcset="{IMG}/_optimized/products/{sl["shot"]}-1200.avif" type="image/avif">'
+        items.append(f'''<article class="slide" style="--slide-bg:{sl['bg']}" aria-label="{esc(p['name'])}">
+    <div class="slide-text">
+      <div class="slide-name">WISEQUEST {esc(p['name'].replace('WiseQuest ',''))}</div>
+      <img class="slide-title" src="{IMG}/home/hero-title-{sl['svg']}-zh-hant.svg" alt="{esc(sl['headline'])}" loading="lazy">
+      <p class="slide-intro">{esc(sl['intro'])}</p>
+      <p class="slide-herbs">主要成分：{esc(p['herbs'])}</p>
+      <div class="slide-actions"><a class="btn btn-primary btn-sm ext" data-product="{slug}" href="{buy_url(p,slug)}">立即選購</a><a class="btn btn-ghost btn-sm" href="{rel}products/{slug}.html">了解產品</a></div>
+    </div>
+    <div class="slide-pic"><picture>{avif}<img src="{IMG}/products/{sl['shot']}.png" alt="{esc(p['name'])}" loading="lazy"></picture></div>
+  </article>''')
+    if not items: return ''
+    nav=''
+    if len(items)>1:
+        cur_attr=' aria-current="true"'
+        dots=''.join(f'<button type="button" aria-label="第 {i+1} 張"{cur_attr if i==0 else ""}></button>' for i in range(len(items)))
+        nav=f'<div class="slides-nav"><button type="button" class="slides-prev" aria-label="上一張">‹</button><div class="slides-dots">{dots}</div><button type="button" class="slides-next" aria-label="下一張">›</button></div>'
+    return f'''<section class="sec-tight slides-sec" aria-label="{esc(s['name'])}產品"><div class="wrap"><div class="slides">
+  <div class="slides-track">{''.join(items)}</div>
+  {nav}
+</div></div></section>
 '''
 
 def head(title, desc, rel, canonical_path, page_id, og_image=None, extra=''):
@@ -496,7 +510,7 @@ def build_series():
     <ul class="hero-trust"><li>{esc(s['organ'])}（中醫傳統觀點）</li><li>成分全部公開</li><li>效果因人而異，誠實交代時間</li></ul></div>
   <div class="hero-visual photo"><img src="{s['photo']}" alt="{esc(s['name'])}" width="900" height="900" fetchpriority="high"></div>
 </div></section>
-
+{series_slides(k,rel)}
 <section class="sec"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">如果你也是這樣</span><h2>這個系列為誰而做</h2></div>
   <div class="grid-2" style="align-items:start">
@@ -550,7 +564,6 @@ def build_products():
         yes=''.join(f'<li>{esc(x)}</li>' for x in p['yes']); no=''.join(f'<li>{esc(x)}</li>' for x in p['no'])
         posts=[q for q in POSTS if q['series']==p['series']]
         pr=price_str(p, with_compare=True)
-        slide=slide_band(slug,p,url)
         ld=json.dumps({"@context":"https://schema.org","@type":"Product","name":p['name'],"image":p['image'],"description":p['desc'],"brand":{"@type":"Brand","name":"WiseQuest"},"url":f"{SITE_URL}/products/{slug}.html","offers":{"@type":"Offer","priceCurrency":"USD","price":str(p['price']) if p['price'] else "0","availability":"https://schema.org/OutOfStock" if p.get('oos') else "https://schema.org/InStock","url":url}},ensure_ascii=False) if not p.get('is_bundle') else ''
         body=f'''
 <section class="pdp"><div class="wrap">
@@ -572,7 +585,7 @@ def build_products():
     </div>
   </div>
 </div></section>
-{slide}
+
 <section class="sec bg-cream"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">成分與用法</span><h2>你知道自己每天用的是什麼</h2></div>
   <div class="spec">
