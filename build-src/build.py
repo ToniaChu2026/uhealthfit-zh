@@ -3,10 +3,14 @@
 位置：repo/build-src/build.py　執行：python3 build-src/build.py　→ 直接輸出到 repo 根目錄（GitHub Pages 的發布根）
 改文案的地方：本檔的 SERIES / PRODUCTS / QUIZ / FAQS 資料區、posts/ 內的 12 篇文章、src/style.css、src/main.js
 """
-import json, os, re, shutil, html as H
+import json, os, re, shutil, hashlib, html as H
 from urllib.parse import quote
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+# 依內容產生版本號，加在 CSS／JS 網址後面：內容一改，瀏覽器就會重新下載，不會拿到舊快取
+def _ver(path):
+    return hashlib.md5(open(os.path.join(ROOT,'src',path),'rb').read()).hexdigest()[:8]
+CSS_VER = _ver('style.css'); JS_VER = _ver('main.js')
 DIST = os.path.dirname(ROOT)  # repo 根目錄
 SHOP = 'https://zh.uhealthfit.com/zh-hant-us'  # 強制美國市場（USD）；根路徑預設為 EUR 市場
 SITE_URL = 'https://toniachu2026.github.io/uhealthfit-zh'  # GitHub Pages 網址；綁自訂網域後改這一行重建
@@ -228,33 +232,43 @@ SLIDES = {
  'lifting-serum':    dict(svg='lifting-serum',       bg='#D3CFAD', headline='更緊緻 更亮澤／更年輕的肌膚',    intro='高濃度植萃精華，日復一日，見證肌膚的提升與煥亮。', shot='herbal-lifting-revitalizing-serum/lifting-serum-product-shot-wide'),
  'enerbalance':      dict(svg='enerbalance',         bg='#ECE4D4', headline='咖啡因短暫提神／不如日日滋養',    intro='真正持久的活力，來自身體整體協調。戒掉咖啡因，不用再靠刺激。', shot='enerbalance/enerbalance-product-shot-wide'),
 }
-def series_slides(k, rel):
-    """系列頁的產品輪播：同官網首頁 slides，電腦版左文右圖，每個產品一張"""
-    s=SERIES[k]; items=[]
+def series_hero(k, rel):
+    """系列頁頁首輪播：同 uhealthfit.com/zh-TW 首頁 slides——滿版、左文右圖、自動切換。
+    第一張是系列介紹（含 h1），後面每個產品一張（花體字標題）。"""
+    s=SERIES[k]; guide=[p for p in POSTS if p['series']==k][0]['slug']
+    slides=[f'''<article class="slide slide-intro" aria-label="{esc(s['name'])}">
+    <div class="wrap slide-inner">
+      <div class="slide-text"><div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><span>六大系列</span><span>›</span><span>{s['name']}</span></div>
+        <span class="series-tag s-{k}"><span class="dot"></span>{s['name']} · {esc(s['tag'])}</span>
+        <h1>{esc(s['h1'])}</h1><p class="lead">{esc(s['lead'])}</p>
+        <div class="hero-cta"><a class="btn btn-primary" href="#products">看這個系列的產品</a><a class="btn btn-ghost" href="{rel}blog/{guide}.html">先讀選購指南</a></div>
+        <ul class="hero-trust"><li>{esc(s['organ'])}（中醫傳統觀點）</li><li>成分全部公開</li><li>效果因人而異，誠實交代時間</li></ul></div>
+      <div class="slide-photo"><img src="{s['photo']}" alt="{esc(s['name'])}" width="900" height="900" fetchpriority="high"></div>
+    </div>
+  </article>''']
     for slug in s['products']:
         sl=SLIDES.get(slug); p=PRODUCTS[slug]
         if not sl: continue
         avif='' if sl.get('avif') is False else f'<source srcset="{IMG}/_optimized/products/{sl["shot"]}-1200.avif" type="image/avif">'
-        items.append(f'''<article class="slide" style="--slide-bg:{sl['bg']}" aria-label="{esc(p['name'])}">
-    <div class="slide-text">
-      <div class="slide-name">WISEQUEST {esc(p['name'].replace('WiseQuest ',''))}</div>
-      <img class="slide-title" src="{IMG}/home/hero-title-{sl['svg']}-zh-hant.svg" alt="{esc(sl['headline'])}" loading="lazy">
-      <p class="slide-intro">{esc(sl['intro'])}</p>
-      <p class="slide-herbs">主要成分：{esc(p['herbs'])}</p>
-      <div class="slide-actions"><a class="btn btn-primary btn-sm ext" data-product="{slug}" href="{buy_url(p,slug)}">立即選購</a><a class="btn btn-ghost btn-sm" href="{rel}products/{slug}.html">了解產品</a></div>
+        slides.append(f'''<article class="slide" style="--slide-bg:{sl['bg']}" aria-label="{esc(p['name'])}">
+    <div class="wrap slide-inner">
+      <div class="slide-text">
+        <div class="slide-name">WISEQUEST {esc(p['name'].replace('WiseQuest ',''))}</div>
+        <img class="slide-title" src="{IMG}/home/hero-title-{sl['svg']}-zh-hant.svg" alt="{esc(sl['headline'])}" loading="lazy">
+        <p class="slide-intro-text">{esc(sl['intro'])}</p>
+        <p class="slide-herbs">主要成分：{esc(p['herbs'])}</p>
+        <div class="hero-cta"><a class="btn btn-primary ext" data-product="{slug}" href="{buy_url(p,slug)}">立即選購</a><a class="btn btn-ghost" href="{rel}products/{slug}.html">了解產品</a></div>
+      </div>
+      <div class="slide-pic"><picture>{avif}<img src="{IMG}/products/{sl['shot']}.png" alt="{esc(p['name'])}" loading="lazy"></picture></div>
     </div>
-    <div class="slide-pic"><picture>{avif}<img src="{IMG}/products/{sl['shot']}.png" alt="{esc(p['name'])}" loading="lazy"></picture></div>
   </article>''')
-    if not items: return ''
-    nav=''
-    if len(items)>1:
-        cur_attr=' aria-current="true"'
-        dots=''.join(f'<button type="button" aria-label="第 {i+1} 張"{cur_attr if i==0 else ""}></button>' for i in range(len(items)))
-        nav=f'<div class="slides-nav"><button type="button" class="slides-prev" aria-label="上一張">‹</button><div class="slides-dots">{dots}</div><button type="button" class="slides-next" aria-label="下一張">›</button></div>'
-    return f'''<section class="sec-tight slides-sec" aria-label="{esc(s['name'])}產品"><div class="wrap"><div class="slides">
-  <div class="slides-track">{''.join(items)}</div>
-  {nav}
-</div></div></section>
+    cur_attr=' aria-current="true"'
+    dots=''.join(f'<button type="button" aria-label="前往第 {i+1} 張"{cur_attr if i==0 else ""}></button>' for i in range(len(slides)))
+    return f'''<section class="slides" aria-roledescription="carousel" aria-label="{esc(s['name'])}">
+  <div class="slides-track">{''.join(slides)}</div>
+  <button type="button" class="slides-prev" aria-label="上一張">‹</button><button type="button" class="slides-next" aria-label="下一張">›</button>
+  <div class="slides-dots">{dots}</div>
+</section>
 '''
 
 def head(title, desc, rel, canonical_path, page_id, og_image=None, extra=''):
@@ -275,7 +289,7 @@ def head(title, desc, rel, canonical_path, page_id, og_image=None, extra=''):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{rel}css/style.css">
+<link rel="stylesheet" href="{rel}css/style.css?v={CSS_VER}">
 {extra}
 <!-- 上線前：在此插入 GTM / GA4 / Meta Pixel 容器 -->
 </head>
@@ -358,7 +372,7 @@ def footer(rel):
   <div><h4>購買與客服</h4><ul><li><a class="ext" href="{SHOP}">前往 zh.uhealthfit.com 商店</a></li><li><a class="ext" href="{SHOP}/policies/shipping-policy">運送說明</a></li><li><a class="ext" href="{SHOP}/policies/refund-policy">退貨政策</a></li><li><a class="ext" href="{SHOP}/policies/privacy-policy">隱私權政策</a></li><li><a class="ext" href="{SHOP}/policies/terms-of-service">服務條款</a></li></ul></div>
   <div class="copy">© 2026 Uhealth Trading Inc. 版權所有。本站為 WiseQuest 系列的介紹網站，購買於 zh.uhealthfit.com 完成。</div>
 </div></footer>
-<script src="{rel}js/main.js" defer></script>
+<script src="{rel}js/main.js?v={JS_VER}" defer></script>
 </body></html>
 '''
 
@@ -502,15 +516,7 @@ def build_series():
         sits=''.join(f'<li>{esc(x)}</li>' for x in s['situations'])
         others=''.join(f'<a class="scard s-{o}" href="{rel}series/{o}.html"><div class="scard-pic"><img src="{SERIES[o]["photo"]}" alt="" loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[o]["en"]}</span><h3>{SERIES[o]["name"]}</h3><div class="hook">{SERIES[o]["h1"]}</div><span class="go">看系列 →</span></a>' for o in SERIES_ORDER if o!=k)
         body=f'''
-<section class="hero s-{k}"><div class="wrap">
-  <div><div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><span>六大系列</span><span>›</span><span>{s['name']}</span></div>
-    <span class="series-tag"><span class="dot"></span>{s['name']} · {esc(s['tag'])}</span>
-    <h1>{esc(s['h1'])}</h1><p class="lead">{esc(s['lead'])}</p>
-    <div class="hero-cta"><a class="btn btn-primary" href="#products">看這個系列的產品</a><a class="btn btn-ghost" href="{rel}blog/{[p for p in POSTS if p['series']==k][0]['slug']}.html">先讀選購指南</a></div>
-    <ul class="hero-trust"><li>{esc(s['organ'])}（中醫傳統觀點）</li><li>成分全部公開</li><li>效果因人而異，誠實交代時間</li></ul></div>
-  <div class="hero-visual photo"><img src="{s['photo']}" alt="{esc(s['name'])}" width="900" height="900" fetchpriority="high"></div>
-</div></section>
-{series_slides(k,rel)}
+{series_hero(k,rel)}
 <section class="sec"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">如果你也是這樣</span><h2>這個系列為誰而做</h2></div>
   <div class="grid-2" style="align-items:start">

@@ -84,19 +84,29 @@
       function done(){form.style.display='none';var ok=form.parentNode.querySelector('.email-ok');if(ok){ok.style.display='block';}if(window.gtag){gtag('event','generate_lead',{method:'quiz_email'});}}
     });
   }
-  // 系列頁產品輪播
+  // 系列頁頁首輪播：箭頭、圓點、滑動、約 6 秒自動切換（滑鼠移入或觸控時暫停）
   document.querySelectorAll('.slides').forEach(function(box){
     var track=box.querySelector('.slides-track'), dots=[].slice.call(box.querySelectorAll('.slides-dots button')), n=track.children.length;
     if(n<2) return;
-    var idx=0, t;
+    var idx=0, t, timer, paused=false;
+    var still=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function preload(i){[].forEach.call(track.children[i].querySelectorAll('img[loading=lazy]'),function(img){img.loading='eager';});}
     function mark(){dots.forEach(function(d,i){if(i===idx){d.setAttribute('aria-current','true');}else{d.removeAttribute('aria-current');}});}
-    function go(i){idx=(i+n)%n; mark(); track.scrollTo({left:idx*track.clientWidth});}
-    box.querySelector('.slides-prev').addEventListener('click',function(){go(idx-1);});
-    box.querySelector('.slides-next').addEventListener('click',function(){go(idx+1);});
-    dots.forEach(function(d,i){d.addEventListener('click',function(){go(i);});});
-    // 手指滑動或觸控板捲動停下後，同步目前是第幾張
+    function go(i){idx=(i+n)%n; preload(idx); preload((idx+1)%n); mark(); track.scrollTo({left:idx*track.clientWidth});}
+    function play(){clearInterval(timer); if(!still){timer=setInterval(function(){if(!paused&&!document.hidden){go(idx+1);}},6000);}}
+    box.querySelector('.slides-prev').addEventListener('click',function(){go(idx-1);play();});
+    box.querySelector('.slides-next').addEventListener('click',function(){go(idx+1);play();});
+    dots.forEach(function(d,i){d.addEventListener('click',function(){go(i);play();});});
+    box.addEventListener('mouseenter',function(){paused=true;});
+    box.addEventListener('mouseleave',function(){paused=false;});
+    box.addEventListener('focusin',function(){paused=true;});
+    box.addEventListener('focusout',function(){paused=false;});
+    track.addEventListener('touchstart',function(){paused=true;},{passive:true});
+    track.addEventListener('touchend',function(){setTimeout(function(){paused=false;},4000);},{passive:true});
     track.addEventListener('scroll',function(){clearTimeout(t);t=setTimeout(function(){idx=Math.round(track.scrollLeft/track.clientWidth);mark();},150);});
     window.addEventListener('resize',function(){track.scrollTo({left:idx*track.clientWidth,behavior:'auto'});});
+    window.addEventListener('load',function(){preload(1);});
+    play();
   });
 
   function toast(msg){var t=document.querySelector('.toast');if(!t){t=document.createElement('div');t.className='toast';document.body.appendChild(t);}t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},3200);}
