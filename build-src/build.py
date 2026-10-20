@@ -11,7 +11,11 @@ DIST = os.path.dirname(ROOT)  # repo 根目錄
 SHOP = 'https://zh.uhealthfit.com/zh-hant-us'  # 強制美國市場（USD）；根路徑預設為 EUR 市場
 SITE_URL = 'https://toniachu2026.github.io/uhealthfit-zh'  # GitHub Pages 網址；綁自訂網域後改這一行重建
 IMG = 'https://uhealthfit.com'
-LOGO = f'{IMG}/uhealthfit/uhealthfit_zh_logo.svg'
+LOGO = f'{IMG}/uhealthfit/uhealthfit_zh_logo.svg'  # 導覽列：優健堂（同 uhealthfit.com/zh-TW）
+LOGO_WHITE = 'img/uhealthfit-logo-white.svg'  # 頁尾：UHealthFit 白色字標（同 zh.uhealthfit.com 商店頁首）
+SHOP_CDN = 'https://zh.uhealthfit.com/cdn/shop'  # 官方商店（Shopify）素材：六大系列情境照、產品實拍
+def shop_img(path, width=800):
+    return f'{SHOP_CDN}/{path}&width={width}'
 KLAVIYO_COMPANY = 'Xxa5rp'
 KLAVIYO_LIST = 'TKC3Bu'
 TODAY = '2026-10-19'
@@ -29,7 +33,7 @@ SERIES = {
    products=['eye-patches','lumiview','eye-cream'], bundle='eye-care-trio',
    combo=('護眼三寶怎麼搭','睡前貼眼貼（外），每天兩次 LumiView（內），白天不方便貼眼貼時擦眼霜（日）。三個產品不是三個選擇，而是一天二十四小時的三個時段。'),
    faq=[('眼貼和蒸氣眼罩有什麼不同？','蒸氣眼罩是熱敷放鬆，十五分鐘結束；冷敷眼貼貼在眼周肌膚上，草本透過肌膚緩緩釋放，陪你度過整晚。兩者用途不同，可以依習慣選擇。'),('我已經在吃葉黃素，還需要嗎？','葉黃素補充的是視網膜相關的營養；長時間用眼後的乾澀疲勞感是另一個面向。兩者不衝突，是否同時使用建議先與醫師或藥師討論。'),('眼貼會進到眼睛裡嗎？','不會。眼貼貼在內眼角、外眼角與下眼瞼下方的肌膚上，不入眼；日本製造、不含防腐劑，過敏回報極少（依品牌內部客服紀錄）。首次使用前先做局部皮膚測試，孕婦請勿使用。')],
-   image=f'{IMG}/_optimized/concerns/eye-care-1200.avif', image_fallback=f'{IMG}/products/eye-patches/eye-patches-box-front.png'),
+   photo=shop_img('collections/1_46cb0e74-a579-49cb-92db-27a44cc036be.jpg?v=1776886629',900), image=f'{IMG}/_optimized/concerns/eye-care-1200.avif', image_fallback=f'{IMG}/products/eye-patches/eye-patches-box-front.png'),
  'dental': dict(name='口腔健康系列', short='固齒', en='Dental Care', color='var(--c-dental)', organ='腎主骨，齒為骨之餘',
    tag='刷牙之外的日常', h1='健康牙齦，穩固牙齒',
    lead='刷牙與牙線照顧的是看得見的表面。每天一次草本膠囊，從內在為牙齦與牙齒的日常健康多加一層支持——也是很多子女替爸媽準備的一份心意。',
@@ -38,7 +42,7 @@ SERIES = {
    products=['dentaforte'], bundle=None,
    combo=('怎麼開始','DentaForte 每天隨餐服用，不需要改變原有刷牙習慣；請持續定期牙科檢查，有任何口腔不適請先就醫。'),
    faq=[('這能取代看牙醫嗎？','不能。DentaForte 是膳食補充劑，不是藥品，也不能取代牙醫的檢查與處置。它的位置是「刷牙之外、看牙之間」的日常保養。'),('要吃多久？','建議至少給自己 4–8 週，作為長期口腔健康管理的一部分；效果因人而異。'),('替長輩購買要注意什麼？','長輩若正在服藥或有慢性健康狀況，請先與醫師或藥師確認。全植物膠囊、隨餐服用，放在早餐旁最容易記得。')],
-   image=f'{IMG}/products/dentaforte/dentaforte-product-shot-wide.png', image_fallback=f'{IMG}/products/dentaforte/dentaforte-bottle-front.png'),
+   photo=shop_img('collections/2_d6d295f9-6329-4973-aad6-05f2a9b122ca.jpg?v=1776886620',900), image=f'{IMG}/products/dentaforte/dentaforte-product-shot-wide.png', image_fallback=f'{IMG}/products/dentaforte/dentaforte-bottle-front.png'),
  'sleep': dict(name='睡眠系列', short='睡眠', en='Sleep Care', color='var(--c-sleep)', organ='心主神明',
    tag='不含褪黑素・配方溫和、不設計為長期依賴', h1='白天放鬆，夜裡好眠',
    lead='壓力大的日子，腦子到了晚上還停不下來。這個系列的原則很簡單：先安撫白天的壓力，支持身體原本的睡眠節律——不靠外力「關機」，狀態穩定後可以停用。',
@@ -47,7 +51,7 @@ SERIES = {
    products=['calmoon'], bundle=None,
    combo=('怎麼開始','Calmoon 建議中午飯後與晚飯後／睡前一小時各 3 粒。搭配睡前一小時放下手機、固定起床時間，效果更容易累積。'),
    faq=[('為什麼中午也要吃？','因為這個配方照顧的是「白天的壓力」。中午那一次幫忙放下上午的緊繃，晚上那一次支持自然入睡。'),('會不會隔天昏沉？','Calmoon 不含褪黑素，配方溫和。每個人的感受不同，建議先從建議用量開始觀察。'),('可以和其他助眠產品一起用嗎？','若正在使用任何助眠產品或藥物，請先與醫師或藥師討論，不要自行疊加。')],
-   image=f'{IMG}/products/calmoon/calmoon-product-shot-wide.png', image_fallback=f'{IMG}/products/calmoon/calmoon-bottle-front.png'),
+   photo=shop_img('collections/Bedtime-Habits-scaled.jpg?v=1785620068',900), image=f'{IMG}/products/calmoon/calmoon-product-shot-wide.png', image_fallback=f'{IMG}/products/calmoon/calmoon-bottle-front.png'),
  'digestive': dict(name='消化系列', short='消化', en='Digestive Care', color='var(--c-digestive)', organ='脾主運化',
    tag='不含番瀉葉', h1='順暢自然，不靠刺激',
    lead='不是不通，是通了還是脹——潤腸與行氣是兩件事。以火麻仁為核心的六味草本，溫和支持腸道的自然節律，不含番瀉葉，節律穩定後可以停用。',
@@ -56,7 +60,7 @@ SERIES = {
    products=['herbalflow'], bundle=None,
    combo=('怎麼開始','HerbalFlow 每天 2 次、每次 3 粒隨餐。搭配每天固定時間如廁、多喝溫水、飯後散步十分鐘，更容易養成節律。'),
    faq=[('和益生菌衝突嗎？','益生菌照顧的是菌相，HerbalFlow 的思路是潤腸與行氣，兩者角度不同。是否同時使用請先與醫師或藥師討論。'),('會不會越吃越多？','HerbalFlow 不含番瀉葉等刺激性成分，設計原則是支持節律而非刺激；節律穩定後可以停用。'),('什麼情況該去看醫師？','若有持續性的腹痛、體重明顯變化、排便型態突然改變或出血，請直接就醫，不要只依賴保健品。')],
-   image=f'{IMG}/products/herbalflow/herbalflow-product-shot-wide.png', image_fallback=f'{IMG}/products/herbalflow/herbalflow-bottle-front.png'),
+   photo=shop_img('collections/Inside-1bloating.jpg?v=1785620047',900), image=f'{IMG}/products/herbalflow/herbalflow-product-shot-wide.png', image_fallback=f'{IMG}/products/herbalflow/herbalflow-bottle-front.png'),
  'skin': dict(name='肌膚系列', short='肌膚', en='Skin Care', color='var(--c-skin)', organ='肺主皮毛',
    tag='無類固醇・溫和到可以天天用', h1='鎮靜、舒適，更柔軟的肌膚',
    lead='乾燥脫皮、換季敏感、曬後、蚊蟲叮咬後，或是容易長痘的膚況——東方草本加上透明質酸、維生素 E 與維生素 C 衍生物，為肌膚做好每天的保濕、舒緩與屏障保養。全家可用，美國製造。',
@@ -65,7 +69,7 @@ SERIES = {
    products=['soothing-cream','clarifying-cream'], bundle=None,
    combo=('怎麼選','乾燥、換季敏感、曬後、蚊蟲叮咬後 → 草本舒緩修護霜；易出油、容易長痘的膚況 → 草本淨顏霜。兩者都是外用保養品，可以依部位分開使用。'),
    faq=[('無類固醇是什麼意思？','配方中不含類固醇成分。這是一款日常保養品，不是藥品；若醫師已為你開立外用藥，請依醫囑使用，不要自行替換。'),('小孩可以用嗎？','草本舒緩修護霜設計為全家可用。嬰幼兒或有特殊膚況者，使用前請先諮詢醫師，並先在小範圍測試。'),('淨顏霜會不會太乾？','淨顏霜的思路是「調理油脂＋支持屏障」，含維生素 C 衍生物；若覺得乾，可以只用於易出油部位，其他部位搭配舒緩修護霜。')],
-   image=f'{IMG}/products/herbal-soothing-repair-cream/soothing-repair-cream-product-shot-wide.png', image_fallback=f'{IMG}/products/herbal-soothing-repair-cream/herbal-soothing-repair-cream-jar-front.png'),
+   photo=shop_img('collections/3_e69c85a3-7756-4f7b-8d78-f189c2138e6d.jpg?v=1776886599',900), image=f'{IMG}/products/herbal-soothing-repair-cream/soothing-repair-cream-product-shot-wide.png', image_fallback=f'{IMG}/products/herbal-soothing-repair-cream/herbal-soothing-repair-cream-jar-front.png'),
  'vitality': dict(name='煥顏・活力系列', short='煥顏活力', en='Radiance & Vitality', color='var(--c-vitality)', organ='腎主藏精',
    tag='不要看起來很累', h1='不要看起來很累',
    lead='你要的不是變年輕，是不要看起來很累。外在，用東方草本 × 胜肽的精華幫助肌膚更緊緻、更有光澤；內在，用不含咖啡因的黑膏滋濃縮膠囊，支持穩定、持續的日常活力。',
@@ -74,7 +78,7 @@ SERIES = {
    products=['lifting-serum','enerbalance'], bundle=None,
    combo=('怎麼搭','精華液早晚擦；EnerBalance 每天 2 次、每次 3 粒隨餐。孕婦、哺乳期、服藥中請先諮詢醫師。'),
    faq=[('精華液男生可以用嗎？','可以。男女適用，35 歲以上尤其合適；質地清爽，早晚潔面後使用。'),('EnerBalance 會像咖啡一樣讓人睡不著嗎？','EnerBalance 不含咖啡因與強刺激性成分，思路是日常滋養而非提神。每個人體質不同，建議隨餐服用並觀察。'),('黑膏滋是什麼？','黑膏滋是傳統的草本膏方；EnerBalance 把它濃縮成膠囊，更方便、更衛生、也更容易每天持續。')],
-   image=f'{IMG}/products/herbal-lifting-revitalizing-serum/lifting-serum-product-shot-wide.png', image_fallback=f'{IMG}/products/herbal-lifting-revitalizing-serum/herbal-lifting-revitalizing-serum-bottle-front.png'),
+   photo=shop_img('collections/4_0cd12e86-74cf-4588-b39b-7b5c570db219.jpg?v=1776886625',900), image=f'{IMG}/products/herbal-lifting-revitalizing-serum/lifting-serum-product-shot-wide.png', image_fallback=f'{IMG}/products/herbal-lifting-revitalizing-serum/herbal-lifting-revitalizing-serum-bottle-front.png'),
 }
 SERIES_ORDER = ['eye','dental','sleep','digestive','skin','vitality']
 
@@ -89,7 +93,7 @@ PRODUCTS = {
    trial_handle='試用裝-2日份-wise-quest-草本冷敷眼貼',
    yes=['每天盯螢幕超過 8 小時的上班族與學生','睡前習慣滑手機、想讓眼睛好好休息的人','想先用 $6 試兩晚再決定的人'], no=['孕婦','眼周肌膚有傷口或正在發炎者','對配方任一成分過敏者'],
    faq=[('會進到眼睛裡嗎？','不會。眼貼貼在眼周肌膚上，不入眼。日本製造、不含防腐劑，過敏回報極少（依品牌內部客服紀錄）。'),('白天可以用嗎？','可以。白天用 2–4 片做一次螢幕空檔的輕量護理；睡前再貼滿。白天不方便貼時，可以改用草本舒緩修護眼霜。'),('多久會有感覺？','多數人在使用時就能感受到清涼放鬆；整體的舒適感通常隨著幾週的持續使用慢慢累積，效果因人而異。')],
-   image=f'{IMG}/products/eye-patches/eye-patches-box-front.png', cross=['lumiview','eye-cream','eye-care-trio']),
+   image=shop_img('files/XXT36515.jpg?v=1781960251'), cross=['lumiview','eye-cream','eye-care-trio']),
  'lumiview': dict(series='eye', name='LumiView 草本明目膠囊', en='Herbal Eye Support Capsules', badge=None,
    hook='由內支持眼睛的長期健康', desc='七種東方養目草本濃縮成膠囊，從營養與整體狀態支持眼睛；搭配眼貼，外內更完整。180 粒／約 1 個月。',
    long='中醫傳統認為「肝開竅於目、肝腎同源」——眼睛的狀態，與身體整體的滋養有關。LumiView 以枸杞、菊花、決明子、山藥、茯苓、當歸、黃芪七味傳統草本，從內在支持眼睛的長期健康，是護眼三寶裡負責「內」的那一件。',
@@ -99,7 +103,7 @@ PRODUCTS = {
    variants=[('1 瓶','$119','',True),('2 瓶','$226.10','',False),('3 瓶','$303.45','單瓶成本最低',False)], trial_handle=None,
    yes=['已經在用眼貼、想「內外一起」的人','長時間用眼、想從內在支持眼睛長期健康的人','偏好全素、成分公開的草本配方'], no=['孕婦與哺乳期（請先諮詢醫師）','正在服用處方藥者（請先諮詢醫師）','對配方任一成分過敏者'],
    faq=[('和葉黃素可以一起吃嗎？','兩者角度不同。是否同時使用請先與醫師或藥師討論。'),('需要一直吃嗎？','建議至少給自己 4–8 週；狀態穩定後可以鞏固一段時間再停用，之後依需要再開始。'),('素食者可以吃嗎？','可以。全植物膠囊，全素。')],
-   image=f'{IMG}/products/lumiview/lumiview-bottle-front.png', cross=['eye-patches','eye-cream','eye-care-trio']),
+   image=shop_img('files/ChatGPT_Image_2026_3_29_12_19_42.png?v=1776262574'), cross=['eye-patches','eye-cream','eye-care-trio']),
  'eye-cream': dict(series='eye', name='草本舒緩修護眼霜', en='Herbal Soothing & Repair Eye Cream', badge=('badge-new','新品'),
    hook='看不見的眼貼，白天的眼周呵護', desc='3C 與花粉季節、不方便貼眼貼的時候，隨身為脆弱的眼周肌膚保濕與舒緩。無酒精、無人工香精、無合成色素。',
    long='白天在辦公室不方便貼眼貼，但眼周肌膚一樣需要照顧。這款眼霜以石斛、菊花、決明子、茯苓、當歸根與尤加利葉精油，為脆弱的眼周肌膚做日間的保濕與舒緩，是護眼三寶裡負責「日」的那一件。我們把它定位為護眼，而不是抗老。',
@@ -108,7 +112,7 @@ PRODUCTS = {
    price=59, price_note='20g / 0.7 oz', handle='wisequest-草本舒緩修護眼霜', variants=None, trial_handle=None,
    yes=['白天長時間用眼、想隨身照顧眼周的人','花粉季節眼周容易乾燥不適的人','搭配眼貼，想把日夜都顧到的人'], no=['眼周肌膚有傷口者','對精油類成分敏感者（先局部測試）'],
    faq=[('可以取代眼貼嗎？','它是白天的接力，不是取代。晚上有時間時仍建議使用眼貼。'),('會不會長脂肪粒？','質地設計為清爽型，每次用量米粒大小即可。若有疑慮請先小範圍測試。'),('男生可以用嗎？','可以，男女適用。')],
-   image=f'{IMG}/products/herbal-soothing-repair-eye-cream/herbal-soothing-repair-eye-cream-jar-front.png', cross=['eye-patches','lumiview','eye-care-trio']),
+   image=shop_img('files/Untitled_design_3924dd0b-b2a7-4689-9fe5-931caa8ffc9a.jpg?v=1781959479'), cross=['eye-patches','lumiview','eye-care-trio']),
  'eye-care-trio': dict(series='eye', name='護眼三寶（眼貼＋LumiView＋眼霜）', en='Eye Care Trio', badge=('badge-star','招牌組合'), is_bundle=True,
    hook='外、內、日夜，一次到位', desc='睡前眼貼從外舒緩、白天眼霜接力、LumiView 從內支持——三個產品不是三個選擇，而是一天二十四小時的三個時段。',
    long='很多顧客從 $6 的眼貼體驗裝開始，用了一陣子之後問我們：「還能多做什麼？」護眼三寶就是答案——不是「買三樣更划算」的折扣語言，而是一套方案的三個部分：夜裡（眼貼）、白天（眼霜）、內在（膠囊）。',
@@ -127,7 +131,7 @@ PRODUCTS = {
    variants=[('1 瓶','$269','',True),('2 瓶','$511.10','',False),('3 瓶','$686','單瓶成本最低',False)], trial_handle=None,
    yes=['35–55 歲、想為牙齦長期健康多做一點的人','替父母準備日常口腔保養的子女','重視成分公開、美國製造的人'], no=['正在接受牙科治療者（請先詢問牙醫）','孕婦、哺乳期（請先諮詢醫師）','對配方任一成分過敏者'],
    faq=[('可以取代看牙醫嗎？','不能。這是膳食補充劑，不是藥品；請持續定期牙科檢查。'),('要吃多久？','建議至少 4–8 週，作為長期管理的一部分；效果因人而異。'),('長輩吃方便嗎？','全植物膠囊、隨餐服用，放在早餐旁邊最容易記得，不需要家人在旁盯著。')],
-   image=f'{IMG}/products/dentaforte/dentaforte-bottle-front.png', cross=['herbalflow','calmoon','lumiview']),
+   image=shop_img('files/ChatGPT_Image_2026_3_28_11_46_22.png?v=1776263240'), cross=['herbalflow','calmoon','lumiview']),
  'calmoon': dict(series='sleep', name='Calmoon 安睡草本膠囊', en='Herbal Sleep Support Capsules', badge=None,
    hook='白天放鬆，夜裡好眠', desc='不含褪黑素的草本安神配方。午後與睡前各一次，先幫忙放下白天的緊繃，支持自然的睡眠節律。狀態穩定後可停用。',
    long='夜裡難以放鬆，常常不是夜晚的問題，而是白天沒有「下線」。中醫傳統認為「心主神明」——Calmoon 以炒酸棗仁、合歡皮、茯神、百合、刺五加、丹參、夏枯草七味草本，先安撫白天的壓力，支持身體進入夜間的恢復狀態。不含褪黑素，狀態穩定後可以停用。',
@@ -136,7 +140,7 @@ PRODUCTS = {
    price=139, price_note='180 粒 · 約 1 個月', handle='wisequest-草本助眠膠囊', variants=None, trial_handle=None,
    yes=['壓力大、晚上腦子停不下來的上班族','想避開褪黑素、怕隔天昏沉的人','希望狀態穩定後可以停用、不想長期依賴的人'], no=['正在服用鎮靜或助眠類藥物者（請先諮詢醫師）','孕婦、哺乳期','對配方任一成分過敏者'],
    faq=[('為什麼中午也要吃？','這個配方照顧的是白天的壓力。中午那一次幫忙放下上午的緊繃，晚上那一次支持自然入睡。'),('不含褪黑素，那它靠什麼？','靠傳統上用於安神放鬆的草本複方，思路是支持身體原本的節律，而不是外力「關機」。'),('多久會有感覺？','多數人在前幾週先感受到放鬆感，節律的穩定通常需要 4–8 週；效果因人而異。')],
-   image=f'{IMG}/products/calmoon/calmoon-bottle-front.png', cross=['herbalflow','enerbalance','eye-patches']),
+   image=shop_img('files/ChatGPTImage2026_6_17_05_36_03.jpg?v=1782815977'), cross=['herbalflow','enerbalance','eye-patches']),
  'herbalflow': dict(series='digestive', name='HerbalFlow 草本潤暢膠囊', en='Herbal Digestive Flow Capsules', badge=None,
    hook='順暢自然，不靠刺激', desc='不含番瀉葉。以火麻仁為核心的六味草本複方，兼顧「潤」與「行氣」，溫和支持腸道的自然節律與餐後的輕盈感。',
    long='不是不通，是通了還是脹——潤腸與行氣是兩件事。HerbalFlow 以火麻仁、萊菔子、厚朴、生地黃、當歸、馬齒莧六味草本，一邊潤養、一邊行氣，中醫傳統說「脾主運化」。不含番瀉葉，設計原則是陪腸道找回節奏，而不是逼它；節律穩定後可以停用。',
@@ -145,7 +149,7 @@ PRODUCTS = {
    price=139, price_note='180 粒 · 約 1 個月', handle='wisequest-草本通氣膠囊', variants=None, trial_handle=None,
    yes=['久坐、外食應酬多的上班族','想找不含番瀉葉、溫和選項的人','希望節律穩定後可以停用的人'], no=['孕婦、哺乳期','有持續腹痛、出血等情況者（請先就醫）','對配方任一成分過敏者'],
    faq=[('會不會越吃越多？','HerbalFlow 不含番瀉葉等刺激性成分，設計原則是支持節律；節律穩定後可以停用。'),('和益生菌衝突嗎？','角度不同。是否同時使用請先與醫師或藥師討論。'),('多久會有感覺？','多數人在前幾週先感受到餐後的輕盈感，節律的穩定通常需要 4–8 週；效果因人而異。')],
-   image=f'{IMG}/products/herbalflow/herbalflow-bottle-front.png', cross=['calmoon','dentaforte','enerbalance']),
+   image=shop_img('files/26ffef70cacb47ecb0b0b1e2fc667031_3eb53544-8644-47c2-85e1-519efa90b88c.jpg?v=1782815981'), cross=['calmoon','dentaforte','enerbalance']),
  'soothing-cream': dict(series='skin', name='草本舒緩修護霜', en='Herbal Soothing & Repair Cream', badge=('badge-star','家庭必備'),
    hook='家庭必備的無類固醇修護霜', desc='七種草本＋透明質酸、維生素 E，為乾燥脫皮、換季敏感、曬後與蚊蟲叮咬後的肌膚舒緩保濕、強韌屏障。全身可用，早晚各一次。',
    long='一罐放在家裡、全家都用得到的霜：乾燥脫皮時、換季肌膚敏感時、曬後、蚊蟲叮咬後。蒲公英、紫草、白芷、積雪草、苦參、尤加利、薄荷七種草本，加上透明質酸、維生素 E 與維生素 C 衍生物，做的是舒緩、保濕與屏障保養——無類固醇，溫和到可以天天用。',
@@ -154,7 +158,7 @@ PRODUCTS = {
    price=69, price_note='外用霜 · 全家可用', handle='wisequest-草本舒緩修護霜', variants=None, trial_handle=None,
    yes=['換季時肌膚容易敏感、乾燥脫皮的人','想找一罐全家可用的無類固醇舒緩霜','曬後、蚊蟲叮咬後需要舒緩保濕的人'], no=['對配方任一成分（含精油類）過敏者','有開放性傷口的部位'],
    faq=[('小孩可以用嗎？','設計為全家可用；嬰幼兒或特殊膚況者請先諮詢醫師並先小範圍測試。'),('可以擦臉嗎？','可以，全身可用；臉部建議先局部測試。'),('和淨顏霜怎麼分？','乾燥、敏感、曬後 → 舒緩修護霜；易出油、容易長痘 → 淨顏霜。可依部位分開使用。')],
-   image=f'{IMG}/products/herbal-soothing-repair-cream/herbal-soothing-repair-cream-jar-front.png', cross=['clarifying-cream','eye-cream','lifting-serum']),
+   image=shop_img('files/PicCopilot_image2.jpg?v=1776249690'), cross=['clarifying-cream','eye-cream','lifting-serum']),
  'clarifying-cream': dict(series='skin', name='草本淨顏霜', en='Herbal Clarifying Cream', badge=None,
    hook='為易長痘肌膚精選的草本', desc='溫和調理油脂、支持肌膚屏障，讓膚況看起來更勻淨、更安定。搭配清淡飲食與規律作息，一起把肌膚帶回平衡。',
    long='容易出油、容易長痘的膚況，往往一邊壓油、一邊屏障又變得脆弱。草本淨顏霜以蒲公英、金銀花、丹參、黨參、紫草根油，搭配維生素 C 衍生物與視黃醇棕櫚酸酯，一邊調理油脂、一邊支持屏障，讓膚況看起來更勻淨、更安定。',
@@ -163,7 +167,7 @@ PRODUCTS = {
    price=69, price_note='外用霜', handle='wisequest-草本淨顏霜', variants=None, trial_handle=None,
    yes=['容易出油、容易長痘的膚況','想一起照顧油脂與屏障的人','偏好草本、溫和日常保養的人'], no=['對配方任一成分過敏者','大面積或反覆疼痛硬塊者（請先看皮膚科醫師）'],
    faq=[('多久能看到變化？','膚況的安定需要時間，建議至少 4–8 週並搭配作息與飲食；效果因人而異。'),('可以全臉用嗎？','可以，也可以只用於易出油部位，其他部位搭配舒緩修護霜。'),('白天用需要防曬嗎？','建議白天搭配防曬，這是所有臉部保養的基本。')],
-   image=f'{IMG}/products/herbal-clarifying-cream/herbal-clarifying-cream-jar-front.png', cross=['soothing-cream','lifting-serum','eye-cream']),
+   image=shop_img('files/Untitled_design_c0b7bac5-b45b-48f9-bb62-96d6d17052a5.jpg?v=1781960121'), cross=['soothing-cream','lifting-serum','eye-cream']),
  'lifting-serum': dict(series='vitality', name='草本煥顏提升精華液', en='Herbal Lifting & Revitalizing Serum', badge=('badge-star','精選'),
    hook='更緊緻、更有光澤的肌膚', desc='五種東方草本 × 胜肽、神經醯胺 NP、透明質酸，日復一日幫助肌膚看起來更緊緻、更明亮。男女適用，35 歲以上尤其合適。',
    long='你要的不是變年輕，是不要看起來很累。人參、當歸、白芍、茯苓、積雪草五種東方草本，加上胜肽、神經醯胺 NP 與透明質酸，從支撐、屏障、保濕多個面向，幫助肌膚看起來更緊緻、更有光澤——溫和到可以一直用，能持續的才是會留下來的保養。',
@@ -172,7 +176,7 @@ PRODUCTS = {
    price=189, price_note='精華液', handle='wisequest-草本煥顏提升精華液', variants=None, trial_handle=None,
    yes=['35 歲以上、熬夜壓力大、不想看起來很累的人','想找溫和、能長期持續的初老保養','男女皆適用'], no=['對配方任一成分過敏者','肌膚有傷口或正在發炎的部位'],
    faq=[('和 A 醇類精華比呢？','各有定位。這款走東方草本 × 胜肽的溫和路線，適合想長期持續使用的人。'),('多久有感？','光澤感通常先出現，緊緻感需要更長時間累積；效果因人而異。'),('可以和眼霜一起用嗎？','可以。眼周建議用草本舒緩修護眼霜，全臉用精華液。')],
-   image=f'{IMG}/products/herbal-lifting-revitalizing-serum/herbal-lifting-revitalizing-serum-bottle-front.png', cross=['eye-cream','soothing-cream','enerbalance']),
+   image=shop_img('files/1_9cefe0d6-9848-412c-98c1-462e0c23660b.png?v=1782816030'), cross=['eye-cream','soothing-cream','enerbalance']),
  'enerbalance': dict(series='vitality', name='EnerBalance 黑膏滋膠囊', en='Herbal Vitality Capsules', badge=('badge-new','現貨'), compare=299,
    hook='不靠咖啡因，日日滋養', desc='傳統黑膏滋濃縮成膠囊。七味草本協同配方，支持穩定、持續的日常活力；不含咖啡因與強刺激性成分，無麩質、無添加糖。',
    long='咖啡因給的是短暫的提神，而且常常要付出隔天的代價。EnerBalance 把傳統黑膏滋濃縮成膠囊：西洋參、黃芪、山藥、當歸、陳皮、菊花、玉米鬚七味草本協同，中醫傳統認為可用於日常調養，支持穩定、持續的活力。不含咖啡因，無麩質、無添加糖。',
@@ -181,7 +185,7 @@ PRODUCTS = {
    price=179, price_note='180 粒 · 約 1 個月 · 原價 $299', handle='wisequest-黑膏滋膠囊', variants=None, trial_handle=None,
    yes=['工作壓力大、常覺得精力不足的成年人','想減少對咖啡因依賴的人','重視天然草本日常調養的人'], no=['孕婦、哺乳期','正在服用處方藥者（請先諮詢醫師）','18 歲以下'],
    faq=[('會像咖啡一樣讓人睡不著嗎？','不含咖啡因與強刺激性成分，思路是日常滋養而非提神；建議隨餐服用並觀察。'),('黑膏滋是什麼？','傳統的草本膏方，EnerBalance 把它濃縮成膠囊，更方便、更衛生。'),('現在的價格是多少？','商店目前以 $179 供應（原價 $299），實際金額以 zh.uhealthfit.com 結帳頁顯示為準。')],
-   image=f'{IMG}/products/enerbalance/enerbalance-bottle-front.png', cross=['calmoon','herbalflow','lifting-serum']),
+   image=f'{IMG}/_optimized/products/enerbalance/enerbalance-product-shot-wide-1200.avif', cross=['calmoon','herbalflow','lifting-serum']),
 }
 PRODUCT_ORDER = ['eye-patches','lumiview','eye-cream','eye-care-trio','dentaforte','calmoon','herbalflow','soothing-cream','clarifying-cream','lifting-serum','enerbalance']
 
@@ -244,7 +248,7 @@ def nav(rel, active=''):
     return f'''<div class="topbar">美國地區：眼貼滿 <b>USD $79</b>、其他商品滿 <b>USD $200</b> 免運 · 30 天內未拆封可退 · 於 zh.uhealthfit.com 安全結帳</div>
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="{rel}index.html" aria-label="優健堂 UHealthFit 首頁"><img src="{LOGO}" alt="優健堂 UHealthFit"><span>× WiseQuest<br>Herbal Wellness</span></a>
+    <a class="brand" href="{rel}index.html" aria-label="優健堂 UHealthFit 首頁"><img src="{LOGO}" alt="優健堂 UHealthFit" width="101" height="34"></a>
     <nav aria-label="主選單"><ul class="nav-links">
       <li>{a(rel+'series/eye.html','六大系列','series')}<div class="dd">{dd}</div></li>
       <li>{a(rel+'blog/index.html','選購指南','blog')}</li>
@@ -305,7 +309,7 @@ def footer(rel):
     return f'''</main>
 {disclaimer()}
 <footer class="site"><div class="wrap">
-  <div><img class="logo" src="{LOGO}" alt="優健堂 UHealthFit"><p>融合傳統智慧與現代科學的健康養護平台。</p><p style="margin-top:10px">Uhealth Trading Inc.<br>90 North St, Suite D, Middletown, NY 10940, USA<br><a href="mailto:service@uhealthfit.com">service@uhealthfit.com</a></p><div class="pay">{pays}</div></div>
+  <div><img class="logo" src="{rel}{LOGO_WHITE}" alt="UHealthFit" width="146" height="26"><p>融合傳統智慧與現代科學的健康養護平台。</p><p style="margin-top:10px">Uhealth Trading Inc.<br>90 North St, Suite D, Middletown, NY 10940, USA<br><a href="mailto:service@uhealthfit.com">service@uhealthfit.com</a></p><div class="pay">{pays}</div></div>
   <div><h4>六大系列</h4><ul>{series_links}</ul></div>
   <div><h4>探索</h4><ul><li><a href="{rel}blog/index.html">選購指南</a></li><li><a href="{rel}quiz.html">30 秒測驗</a></li><li><a href="{rel}about.html">關於優健堂與黃醫師</a></li><li><a href="{rel}faq.html">常見問題</a></li><li><a href="{rel}products/eye-care-trio.html">護眼三寶</a></li></ul></div>
   <div><h4>購買與客服</h4><ul><li><a class="ext" href="{SHOP}">前往 zh.uhealthfit.com 商店</a></li><li><a class="ext" href="{SHOP}/policies/shipping-policy">運送說明</a></li><li><a class="ext" href="{SHOP}/policies/refund-policy">退貨政策</a></li><li><a class="ext" href="{SHOP}/policies/privacy-policy">隱私權政策</a></li><li><a class="ext" href="{SHOP}/policies/terms-of-service">服務條款</a></li></ul></div>
@@ -335,8 +339,10 @@ def product_card(slug, rel, wide=False):
 
 def post_card(p, rel):
     prod=PRODUCTS[p['primary_product']]; s=SERIES[p['series']]
+    same=[q for q in POSTS if q['series']==p['series']]
+    thumb = s['photo'] if same.index(p)%2==0 else prod['image']  # 同系列第一篇用情境照、第二篇用產品實拍，避免縮圖重複
     return f'''<article class="post-card s-{p['series']}" data-series="{p['series']}">
-  <a class="thumb" href="{rel}blog/{p['slug']}.html"><img src="{prod['image']}" alt="" loading="lazy"></a>
+  <a class="thumb" href="{rel}blog/{p['slug']}.html"><img src="{thumb}" alt="" loading="lazy"></a>
   <div class="body"><div class="meta"><span class="series-tag s-{p['series']}"><span class="dot"></span>{s['name']}</span><span>· 約 {p['reading_min']} 分鐘</span></div>
   <h3><a href="{rel}blog/{p['slug']}.html">{esc(p['title'])}</a></h3><p>{esc(p['excerpt'])}</p>
   <a class="go" style="color:var(--green);font-weight:700;font-size:14px" href="{rel}blog/{p['slug']}.html">閱讀指南 →</a></div>
@@ -364,7 +370,7 @@ def write(path, content):
 # ───────────────────────────── 首頁 ─────────────────────────────
 def build_home():
     rel=''
-    series_cards=''.join(f'''<a class="scard s-{k}" href="series/{k}.html"><span class="series-tag"><span class="dot"></span>{SERIES[k]['en']}</span><h3>{SERIES[k]['name']}</h3><div class="hook">{SERIES[k]['h1']}</div><p>{esc(SERIES[k]['lead'][:60])}…</p><div class="items">{'・'.join(PRODUCTS[s]['name'].replace('WiseQuest ','') for s in SERIES[k]['products'])}</div><span class="go">看系列 →</span></a>''' for k in SERIES_ORDER)
+    series_cards=''.join(f'''<a class="scard s-{k}" href="series/{k}.html"><div class="scard-pic"><img src="{SERIES[k]['photo']}" alt="" loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[k]['en']}</span><h3>{SERIES[k]['name']}</h3><div class="hook">{SERIES[k]['h1']}</div><p>{esc(SERIES[k]['lead'][:60])}…</p><div class="items">{'・'.join(PRODUCTS[s]['name'].replace('WiseQuest ','') for s in SERIES[k]['products'])}</div><span class="go">看系列 →</span></a>''' for k in SERIES_ORDER)
     posts=''.join(post_card(p,rel) for p in [POST_BY_SLUG[s] for s in ['eye-patch-vs-steam-mask-vs-eye-drops','melatonin-free-sleep-aid-guide','gum-care-supplement-for-parents']])
     featured=''.join(product_card(s,rel) for s in ['eye-patches','calmoon','dentaforte'])
     body=f'''
@@ -430,7 +436,7 @@ def build_home():
     <div class="big">$6<small> / 兩晚體驗裝</small></div>
     <ul><li>日本製造 · 不入眼 · 不含防腐劑 · 過敏回報極少（依品牌內部客服紀錄）</li><li>喜歡再升級：1 盒 $29.99 · 3 盒一個月組 $84（推薦入門）</li><li>所有商品 30 天內未拆封可退</li></ul>
     <a class="btn btn-accent ext" data-product="eye-patches-trial" href="{shop_url(PRODUCTS['eye-patches']['trial_handle'])}">以 $6 體驗兩晚</a></div>
-  <div class="r"><img src="{IMG}/_optimized/products/eye-patches/eye-patches-box-front-706.avif" alt="WiseQuest 明目冷敷眼貼盒裝" loading="lazy"></div>
+  <div class="r"><img src="{shop_img('files/free-trial-package.jpg?v=1758563648',700)}" alt="WiseQuest 明目冷敷眼貼兩晚體驗裝" loading="lazy"></div>
 </div></div></section>
 {journey(rel,'home')}
 {sticky(rel)}
@@ -451,7 +457,7 @@ def build_series():
         posts=''.join(post_card(p,rel) for p in POSTS if p['series']==k)
         reframe=''.join(f'<div class="card white"><div class="num">0{i+1}</div><h3>{esc(t)}</h3><p>{esc(d)}</p></div>' for i,(t,d) in enumerate(s['reframe']))
         sits=''.join(f'<li>{esc(x)}</li>' for x in s['situations'])
-        others=''.join(f'<a class="scard s-{o}" href="{rel}series/{o}.html"><span class="series-tag"><span class="dot"></span>{SERIES[o]["en"]}</span><h3>{SERIES[o]["name"]}</h3><div class="hook">{SERIES[o]["h1"]}</div><span class="go">看系列 →</span></a>' for o in SERIES_ORDER if o!=k)
+        others=''.join(f'<a class="scard s-{o}" href="{rel}series/{o}.html"><div class="scard-pic"><img src="{SERIES[o]["photo"]}" alt="" loading="lazy"></div><span class="series-tag"><span class="dot"></span>{SERIES[o]["en"]}</span><h3>{SERIES[o]["name"]}</h3><div class="hook">{SERIES[o]["h1"]}</div><span class="go">看系列 →</span></a>' for o in SERIES_ORDER if o!=k)
         body=f'''
 <section class="hero s-{k}"><div class="wrap">
   <div><div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><span>六大系列</span><span>›</span><span>{s['name']}</span></div>
@@ -459,7 +465,7 @@ def build_series():
     <h1>{esc(s['h1'])}</h1><p class="lead">{esc(s['lead'])}</p>
     <div class="hero-cta"><a class="btn btn-primary" href="#products">看這個系列的產品</a><a class="btn btn-ghost" href="{rel}blog/{[p for p in POSTS if p['series']==k][0]['slug']}.html">先讀選購指南</a></div>
     <ul class="hero-trust"><li>{esc(s['organ'])}（中醫傳統觀點）</li><li>成分全部公開</li><li>效果因人而異，誠實交代時間</li></ul></div>
-  <div class="hero-visual contain"><img src="{s['image_fallback']}" alt="{esc(s['name'])}" width="800" height="800"></div>
+  <div class="hero-visual photo"><img src="{s['photo']}" alt="{esc(s['name'])}" width="900" height="900" fetchpriority="high"></div>
 </div></section>
 
 <section class="sec"><div class="wrap">
@@ -496,7 +502,7 @@ def build_series():
 {sticky(rel)}
 <script type="application/ld+json">{faq_ld(s['faq'])}</script>
 '''
-        write(f'series/{k}.html', head(f'{s["name"]}｜{s["h1"]} · 優健堂 UHealthFit × WiseQuest', s['lead'][:150], rel, f'series/{k}.html', f'series-{k}', og_image=s['image_fallback'])+nav(rel,'series')+body+footer(rel))
+        write(f'series/{k}.html', head(f'{s["name"]}｜{s["h1"]} · 優健堂 UHealthFit × WiseQuest', s['lead'][:150], rel, f'series/{k}.html', f'series-{k}', og_image=s['photo'])+nav(rel,'series')+body+footer(rel))
 
 # ───────────────────────────── 單品頁 ─────────────────────────────
 def build_products():
@@ -732,6 +738,8 @@ def build_misc():
     write('robots.txt', f'User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n')
     shutil.copy(os.path.join(ROOT,'src','style.css'), os.path.join(DIST,'css','style.css')) if os.path.isdir(os.path.join(DIST,'css')) else (os.makedirs(os.path.join(DIST,'css')), shutil.copy(os.path.join(ROOT,'src','style.css'), os.path.join(DIST,'css','style.css')))
     os.makedirs(os.path.join(DIST,'js'),exist_ok=True); shutil.copy(os.path.join(ROOT,'src','main.js'), os.path.join(DIST,'js','main.js'))
+    os.makedirs(os.path.join(DIST,'img'),exist_ok=True)
+    for f in os.listdir(os.path.join(ROOT,'src','img')): shutil.copy(os.path.join(ROOT,'src','img',f), os.path.join(DIST,'img',f))
     readme=f'''# 優健堂 UHealthFit × WiseQuest 介紹網站（靜態 HTML）
 製作：NTD Digital · {TODAY}
 
@@ -742,6 +750,7 @@ def build_misc():
 
 ## 部署
 GitHub Pages：Settings → Pages → Deploy from a branch → main / (root)。網址 https://toniachu2026.github.io/uhealthfit-zh/，綁自訂網域後改 build-src/build.py 的 SITE_URL 重建。\n\n## 怎麼改網站\n不要直接改根目錄的 HTML（34 頁會不同步）。改 `build-src/` 裡的資料與模板，然後在 repo 根目錄執行 `python3 build-src/build.py`，再 commit & push：\n- 產品、系列、FAQ、測驗題目：`build-src/build.py` 上半部的 SERIES / PRODUCTS / QUIZ / FAQS\n- 導購文章：`build-src/posts/<slug>.html`（第一行 JSON meta → `---END-META---` → HTML 片段）；新增文章請加入 build.py 的 POST_ORDER\n- 樣式／互動：`build-src/src/style.css`、`build-src/src/main.js`\n- 文案合規規範：`build-src/BRIEF.md`
+- Logo 與圖片：導覽列用 uhealthfit.com 的優健堂 SVG（LOGO）、頁尾用 zh.uhealthfit.com 商店頁首的 UHealthFit 白色字標（`build-src/src/img/`）；六大系列情境照與產品實拍取自 zh.uhealthfit.com（Shopify CDN，見 build.py 的 SHOP_CDN／shop_img，`&width=` 可調尺寸），其餘產品圖取自 uhealthfit.com
 上線前：
 1. 綁自訂網域後，把 build-src/build.py 的 SITE_URL 改成正式網域並重建；
 2. 在每頁 </head> 前插入 GTM／GA4／Meta Pixel（js/main.js 已會在購買點擊時送出 begin_checkout_redirect 與 ShopRedirect 事件、測驗完成送 quiz_complete、留資送 generate_lead）；
