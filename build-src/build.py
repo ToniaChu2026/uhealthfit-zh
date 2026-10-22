@@ -27,6 +27,9 @@ EBOOKS = {
   'eye-care': {'title':'螢幕族護眼自救指南','file':'downloads/wisequest-eye-care-guide.pdf'},
   'body-balance': {'title':'現代人身體調養指南','file':'downloads/wisequest-body-balance-guide.pdf'},
 }
+# Klaviyo 寄電子書的 Flow（觸發事件：Requested Quiz Ebook）上線前保持 False：測驗頁不承諾寄信，只提供下載連結。
+# Flow 上線後改成 True 並重建，就會換回「寄到信箱」的說法。
+EBOOK_EMAIL_FLOW_LIVE = False
 TODAY = '2026-10-19'
 
 def shop_url(handle):
@@ -931,12 +934,12 @@ def build_quiz():
         <div class="ebook-copy"><span class="eyebrow">免費電子書 · 黃醫師</span>
           <div data-eb="eye-care"><h4>《螢幕族護眼自救指南》</h4><ul><li>眼睛為什麼越來越累：眨眼、過熱、眼藥水三個關鍵</li><li>門診最常見的 5 個護眼誤區</li><li>4 種用眼類型對照，加上居家養護小貼士</li></ul></div>
           <div data-eb="body-balance" style="display:none"><h4>《現代人身體調養指南》</h4><ul><li>眼睛、睡眠、腸胃、生活：四大面向 16 項身體訊號清單</li><li>對照你的狀態，知道這個月該先照顧哪裡</li><li>七天微調養計畫，小到一定做得到</li></ul></div>
-          <p class="ebook-note">留下 Email，指南 PDF 會連同你的測驗結果寄到信箱。</p>
+          <p class="ebook-note">{'留下 Email，指南 PDF 會連同你的測驗結果寄到信箱。' if EBOOK_EMAIL_FLOW_LIVE else '留下 Email，立即取得指南 PDF 下載連結。'}</p>
         </div>
       </div>
-      <form data-klaviyo-company="{KLAVIYO_COMPANY}" data-klaviyo-list="{KLAVIYO_LIST}" data-ebooks='{EBOOKS_JSON}' novalidate><input type="hidden" name="quiz_result" value=""><input type="hidden" name="lead_magnet" value="body-balance"><input type="email" name="email" placeholder="你的 Email" required aria-label="Email"><button class="btn btn-primary btn-sm" type="submit">免費寄給我</button></form>
+      <form data-klaviyo-company="{KLAVIYO_COMPANY}" data-klaviyo-list="{KLAVIYO_LIST}" data-ebooks='{EBOOKS_JSON}' novalidate><input type="hidden" name="quiz_result" value=""><input type="hidden" name="lead_magnet" value="body-balance"><input type="email" name="email" placeholder="你的 Email" required aria-label="Email"><button class="btn btn-primary btn-sm" type="submit">{'免費寄給我' if EBOOK_EMAIL_FLOW_LIVE else '免費領取'}</button></form>
       <p class="consent">送出即表示你同意收到優健堂的健康養護內容與會員優惠 Email，可隨時取消訂閱。我們不會把你的資料提供給第三方。詳見 <a class="ext" href="https://zh.uhealthfit.com/zh-hant-us/policies/privacy-policy" style="text-decoration:underline">隱私權政策</a>。</p>
-      <div class="email-ok">✓ 已寄出！請留意信箱（沒看到的話，查看一下垃圾郵件匣）。也可以<a class="ebook-dl" href="#" target="_blank" rel="noopener">現在直接下載 PDF →</a></div>
+      <div class="email-ok">{'✓ 已寄出！請留意信箱（沒看到的話，查看一下垃圾郵件匣）。也可以' if EBOOK_EMAIL_FLOW_LIVE else '✓ 已收到你的 Email！指南已經準備好，'}<a class="ebook-dl" href="#" target="_blank" rel="noopener">{'現在直接下載 PDF →' if EBOOK_EMAIL_FLOW_LIVE else '點這裡下載 PDF →'}</a></div>
     </div>
   </div>
   <div class="qnav"><button type="button" class="qback" style="visibility:hidden">← 上一題</button><span class="note">僅供參考 · 非醫療診斷</span></div>
