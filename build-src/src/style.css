@@ -251,6 +251,31 @@ h3{font-size:20px;font-weight:700}
 @media(max-width:1240px){.slide-inner{padding-left:72px;padding-right:72px}}
 @media(max-width:900px){.slide{min-height:0;align-items:flex-start}.slide-inner{grid-template-columns:1fr;gap:18px;padding:24px 20px 56px}.slide-photo,.slide-pic{order:-1}.slide-photo img{aspect-ratio:16/10}.slide-pic img{max-height:220px}.slide-title{width:min(100%,300px)}.slides-prev,.slides-next{display:none}}
 
+/* 買家評價（Judge.me 原文照登） */
+.rev-sum{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--ink-2);margin:4px 0 8px}
+.rev-sum b{font-family:var(--font-en);font-size:20px;color:var(--ink)}
+.stars{color:#E0A100;letter-spacing:1px;font-size:15px;white-space:nowrap}
+.stars i{font-style:normal;color:#D9D4C8}
+.rev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.rev{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.rev-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.rev-item{font-size:12px;color:var(--ink-3)}
+.rev-body{font-size:16px;line-height:1.7;flex:1}
+.rev-meta{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;font-size:13px;color:var(--ink-3)}
+.rev-meta b{color:var(--ink);font-weight:700}
+.rev-ok{color:var(--green);font-weight:700}
+.rev-ok::before{content:"✓ "}
+.rev-meta a{text-decoration:underline;text-underline-offset:2px}
+/* 使用示範影片 */
+.demo{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.demo-video video{width:100%;aspect-ratio:16/9;border-radius:var(--r);background:#000;display:block}
+.demo h2{margin:10px 0 16px}
+.demo-steps{display:grid;gap:14px;margin-bottom:14px}
+.demo-steps li{display:grid;gap:2px}
+.demo-steps b{color:var(--green-dark)}
+.demo-steps span{color:var(--ink-2);font-size:15px}
+@media(max-width:900px){.demo{grid-template-columns:1fr;gap:20px}}
+
 /* 購買固定列 */
 .buybar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#fff;border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .25s}
 .buybar.show{transform:none}

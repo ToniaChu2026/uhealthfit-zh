@@ -271,6 +271,66 @@ def series_hero(k, rel):
 </section>
 '''
 
+
+# ───── 買家評價與示範影片：依《見證與 KOL 影片合規盤點》（2026-10-21）只收 A 類「可用、原文照登」 ─────
+# 規則：原文照登（簡體字不改繁體）；負評必須一併公開（FTC 16 CFR 465）；不收 B 類（待補真人證明／本人同意）與 C 類（下架）；
+#       不收品牌或代理商人員撰寫的評價（B9 待確認，暫不收）。資料擷取自兩個官方商店的 Judge.me 評價，2026-10-22。
+UH_EYE_PATCHES = 'https://uhealthfit.com/zh-TW/products/wisequest-eye-patches'
+UH_EYE_CREAM = 'https://uhealthfit.com/zh-TW/products/wisequest-herbal-soothing-repair-eye-cream'
+REVIEWS = {
+ 'eye-patches': [
+  dict(author='nancy', verified=True, date='2026-10-09', rating=4, text='眼貼感覺很好，只是運輸時間太長了', item='明目冷敷眼貼', src='uhealthfit.com', url=UH_EYE_PATCHES),
+  dict(author='Yin Z.', verified=True, date='2026-10-05', rating=5, text='很好的產品，用在穴位上即可', item='明目冷敷眼貼', src='uhealthfit.com', url=UH_EYE_PATCHES),
+  dict(author='Ming Yao', verified=True, date='2026-02-17', rating=5, text='体验很好，清凉润眼，有rosemary的感觉。', item='明目冷敷眼貼', src='zh.uhealthfit.com', url='SHOP:eye-patches'),
+  dict(author='QING Liang', verified=True, date='2026-02-16', rating=5, text='感覺很好', item='兩晚體驗裝', src='zh.uhealthfit.com', url='SHOP_TRIAL:eye-patches'),
+  dict(author='刘宏庆 刘', verified=True, date='2026-02-05', rating=1, text='还好效不明显', item='明目冷敷眼貼', src='zh.uhealthfit.com', url='SHOP:eye-patches'),
+  dict(author='心敏 羅', verified=True, date='2026-02-01', rating=1, text='不知是否有任何問題，拆開信封袋內空無一物，並沒有任何東西可以試用的。', item='兩晚體驗裝', src='zh.uhealthfit.com', url='SHOP_TRIAL:eye-patches'),
+  dict(author='力工 谭', verified=True, date='2025-12-31', rating=5, text='很好', item='明目冷敷眼貼', src='zh.uhealthfit.com', url='SHOP:eye-patches'),
+  dict(author='A.W.', verified=True, date='2025-11-18', rating=5, text='good', item='兩晚體驗裝', src='zh.uhealthfit.com', url='SHOP_TRIAL:eye-patches'),
+ ],
+ 'eye-cream': [
+  dict(author='nancy', verified=True, date='2026-10-02', rating=5, text='很好用，清清涼涼的', item='草本舒緩修護眼霜', src='uhealthfit.com', url=UH_EYE_CREAM),
+  dict(author='Tay Chea kiang', verified=False, date='2026-07-29', rating=5, text='很好', item='草本舒緩修護眼霜', src='zh.uhealthfit.com', url='SHOP:eye-cream'),
+ ],
+}
+# 合規盤點 A6：眼貼使用示範影片可用；原頁文字「瞬間帶走酸澀」「重拾明亮眼神」已改為中性描述
+DEMOS = {
+ 'eye-patches': dict(src='https://cdn.shopify.com/videos/c/o/v/dc358b61932e4aee89b25db5585fa201.mp4', title='簡單 3 步，給雙眼一段草本放鬆時間',
+   steps=[('即開即用','撕開包裝，取出草本眼貼，隨時隨地開始放鬆。'),('輕輕一貼','順著眼周曲線，貼在內眼角、外眼角與下眼瞼下方的肌膚上，不入眼，帶來清涼感。'),('靜靜休息','閉上雙眼，讓雙眼放鬆。白天可短暫使用，睡前可貼整晚。')]),
+}
+def _rev_url(r):
+    u=r['url']
+    if u.startswith('SHOP_TRIAL:'): return shop_url(PRODUCTS[u.split(':',1)[1]]['trial_handle'])
+    if u.startswith('SHOP:'): return shop_url(PRODUCTS[u.split(':',1)[1]]['handle'])
+    return u
+def _zh_date(d):
+    y,m,dd=d.split('-'); return f'{y} 年 {int(m)} 月 {int(dd)} 日'
+def reviews_section(slug):
+    rs=sorted(REVIEWS.get(slug,[]), key=lambda r:r['date'], reverse=True)
+    if not rs: return ''
+    avg=sum(r['rating'] for r in rs)/len(rs)
+    def stars(n): return f'<span class="stars" role="img" aria-label="5 分中的 {n} 分">'+'★'*n+'<i>'+'★'*(5-n)+'</i></span>'
+    cards=''.join(f'''<article class="rev"><div class="rev-top">{stars(r['rating'])}<span class="rev-item">購買品項：{esc(r['item'])}</span></div>
+      <p class="rev-body">{esc(r['text'])}</p>
+      <div class="rev-meta"><b>{esc(r['author'])}</b><span class="{'rev-ok' if r['verified'] else 'rev-na'}">{'已驗證買家' if r['verified'] else '未標示為已驗證買家'}</span><span>{_zh_date(r['date'])}</span><a class="ext" href="{_rev_url(r)}" target="_blank" rel="noopener">{r['src']}</a></div></article>''' for r in rs)
+    return f'''<section class="sec" id="reviews"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">買家評價</span><h2>買家怎麼說</h2>
+    <p class="rev-sum">{stars(round(avg))}<b>{avg:.1f}</b> / 5 · {len(rs)} 則評價</p>
+    <p class="note">評價取自 uhealthfit.com 與 zh.uhealthfit.com 兩個官方商店的 Judge.me 評價，原文照登（簡體字保留原文），正面與負面評價一併呈現，不含品牌或代理商人員撰寫的評價。每則為個人使用感受，效果因人而異。</p></div>
+  <div class="rev-grid">{cards}</div>
+</div></section>
+'''
+def demo_section(slug):
+    d=DEMOS.get(slug)
+    if not d: return ''
+    steps=''.join(f'<li><b>Step {i+1}　{esc(t)}</b><span>{esc(x)}</span></li>' for i,(t,x) in enumerate(d['steps']))
+    return f'''<section class="sec"><div class="wrap demo">
+  <div class="demo-video"><video src="{d['src']}#t=0.5" controls muted playsinline preload="metadata" aria-label="{esc(d['title'])}（使用示範影片）"></video></div>
+  <div><span class="eyebrow">使用示範</span><h2>{esc(d['title'])}</h2><ol class="demo-steps">{steps}</ol>
+    <p class="note">影片為使用方式示範；建議用量與注意事項，請以上方「用法與注意」為準。</p></div>
+</div></section>
+'''
+
 def og_png(url):
     # 社群分享預覽不支援 AVIF：把 uhealthfit.com 的 _optimized/...-1200.avif 換回原始 PNG
     m=re.match(r'(https://uhealthfit\.com)/_optimized/(.+)-\d+\.avif$', url)
@@ -604,12 +664,12 @@ def build_products():
   </div>
   <div class="timeline"><div class="ic">⏱</div><div><b>誠實的期待：</b>多數人會先在前幾週感受到使用時的舒適感，整體狀態的穩定通常需要給自己至少 4–8 週。效果因人而異；若一開始沒有太多感覺，這是正常的。</div></div>
 </div></section>
-
+{demo_section(slug)}
 <section class="sec"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">適合誰</span><h2>這款適合你嗎？</h2></div>
   <div class="who"><div class="box yes"><h3>適合</h3><ul>{yes}</ul></div><div class="box no"><h3>不適合或請先諮詢醫師</h3><ul>{no}</ul></div></div>
 </div></section>
-
+{reviews_section(slug)}
 <section class="sec bg-green-light"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">常見問題</span><h2>購買前，你可能想知道</h2></div>
   <div class="faq-list">{faq_block(p['faq'])}</div>
