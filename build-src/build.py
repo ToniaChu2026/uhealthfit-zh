@@ -434,7 +434,7 @@ def build_home():
 <section class="hero"><div class="wrap">
   <div><span class="eyebrow">優健堂 UHealthFit × WiseQuest · 醫師研發草本保健</span>
     <h1>不壓制、不依賴，<br><em>從根源支持身體</em></h1>
-    <p class="lead">護眼、固齒、舒眠、順暢、肌膚、活力——六大日常養護系列，由紐約州持照針灸師黃醫師研發。傳統草本配方、現代萃取工藝，美國・日本製造，成分全部公開。</p>
+    <p class="lead">護眼、固齒、舒眠、順暢、肌膚、活力——六大日常養護系列，由中國中西醫結合執業醫師黃醫師研發。傳統草本配方、現代萃取工藝，美國・日本製造，成分全部公開。</p>
     <div class="hero-cta"><a class="btn btn-primary" href="quiz.html">30 秒找到我的起點</a><a class="btn btn-ghost" href="series/eye.html">直接看六大系列</a></div>
     <ul class="hero-trust"><li>無添加 · 非轉基因</li><li>第三方純度檢測</li><li>全植物膠囊 · 全素</li></ul>
   </div>
@@ -442,7 +442,7 @@ def build_home():
     <div class="hero-chip chip-2"><b>6</b>大養護系列 · 11 款產品</div><div class="hero-chip chip-1"><b>$6</b>兩晚份眼貼試用裝</div></div>
 </div></section>
 <section class="trustbar" aria-label="品質保證"><div class="wrap"><ul>
-  <li>美國・日本製造<small>cGMP 規範生產</small></li><li>第三方純度檢測<small>成品送驗</small></li><li>成分全部公開<small>每一味都查得到</small></li><li>無添加 · 非轉基因<small>無人工色素、防腐劑</small></li><li>持照醫師研發<small>二十年臨床經驗</small></li><li>30 天未拆封可退<small>service@uhealthfit.com</small></li>
+  <li>美國・日本製造<small>cGMP 規範生產</small></li><li>第三方純度檢測<small>成品送驗</small></li><li>成分全部公開<small>每一味都查得到</small></li><li>無添加 · 非轉基因<small>無人工色素、防腐劑</small></li><li>執業醫師研發<small>二十年臨床經驗</small></li><li>30 天未拆封可退<small>service@uhealthfit.com</small></li>
 </ul></div></section>
 
 <section class="sec"><div class="wrap">
@@ -472,10 +472,10 @@ def build_home():
 </div></section>
 
 <section class="sec doctor bg-dark"><div class="wrap">
-  <div><img src="{IMG}/home/dr-h.png" alt="黃醫師 Dr. Huang，美國紐約州持照針灸師" loading="lazy"></div>
+  <div><img src="{IMG}/home/dr-h.png" alt="黃醫師 Dr. Huang，中國中西醫結合執業醫師" loading="lazy"></div>
   <div><span class="eyebrow">研發者 · 黃醫師 Dr. Huang</span><h2>由一位看了二十年「整個人」的醫師研發</h2>
-  <p>黃醫師是美國紐約州持照針灸師，擁有二十年臨床經驗與草本配方研發專長。她師從多位北京國家級名老中醫與清末御醫傳人，臨床橫跨內科、消化、睡眠、皮膚與疼痛等領域，並專研中醫美容二十年。</p>
-  <blockquote>「我一再看到同一件事：讓症狀暫時消失，不等於身體真的恢復。我想做的，是幫身體重新學會照顧自己——用它聽得懂的語言，草本。」<footer>— 黃醫師 · WiseQuest 配方研發者</footer></blockquote>
+  <p>黃醫師是中國中西醫結合執業醫師、中醫全科醫師，擁有二十年臨床經驗與草本配方研發專長。她師從多位國家級名老中醫、各科教授與清末御醫傳人；臨床涉及內科、皮膚科、婦科、兒科，並專研中醫美容二十年，自主研發的中藥化妝品曾獲國家發明專利。</p>
+  <blockquote>「很多時候讓症狀暫時消失，不等於身體真的恢復。我想做的，是幫身體重新找回自己健康的狀態——用承傳千年的草本經驗，幫助身體恢復平衡。」<footer>— 黃醫師 · WiseQuest 配方研發者</footer></blockquote>
   <a class="btn btn-light" href="about.html">認識黃醫師與品牌理念</a></div>
 </div></section>
 
@@ -498,7 +498,7 @@ def build_home():
 {journey(rel,'home')}
 {sticky(rel)}
 '''
-    write('index.html', head('優健堂 UHealthFit × WiseQuest｜醫師研發草本保健 · 護眼・固齒・舒眠・順暢・肌膚・活力','由紐約州持照針灸師黃醫師研發的 WiseQuest 草本保健系列：明目冷敷眼貼、草本明目膠囊、固齒膠囊、安睡膠囊、潤暢膠囊、舒緩修護霜等。美國・日本製造，成分全部公開，$6 試用裝起。',rel,'index.html','home')+nav(rel,'home')+body+footer(rel))
+    write('index.html', head('優健堂 UHealthFit × WiseQuest｜醫師研發草本保健 · 護眼・固齒・舒眠・順暢・肌膚・活力','由中國中西醫結合執業醫師黃醫師研發的 WiseQuest 草本保健系列：明目冷敷眼貼、草本明目膠囊、固齒膠囊、安睡膠囊、潤暢膠囊、舒緩修護霜等。美國・日本製造，成分全部公開，$6 試用裝起。',rel,'index.html','home')+nav(rel,'home')+body+footer(rel))
 
 # ───────────────────────────── 系列頁 ─────────────────────────────
 def build_series():
@@ -732,10 +732,10 @@ def build_about():
   <div class="hero-visual"><img src="{IMG}/home/all-products-lineup.png" alt="優健堂全系列產品陳列"></div>
 </div></section>
 <section class="sec doctor bg-dark"><div class="wrap">
-  <div><img src="{IMG}/home/dr-h.png" alt="黃醫師 Dr. Huang" loading="lazy"></div>
+  <div><img src="{IMG}/home/dr-h.png" alt="黃醫師 Dr. Huang，中國中西醫結合執業醫師" loading="lazy"></div>
   <div><span class="eyebrow">研發者 · 黃醫師 Dr. Huang</span><h2>由一位看了二十年「整個人」的醫師研發</h2>
-  <p>黃醫師是美國紐約州持照針灸師，擁有二十年臨床經驗與草本配方研發專長。她師從多位北京國家級名老中醫、各科教授與清末御醫傳人，學習中醫針藥特色療法；臨床橫跨內科、消化、睡眠、皮膚與疼痛等領域，並專研中醫美容二十年，自主研發的中藥化妝品曾獲國家發明專利。</p>
-  <blockquote>「我一再看到同一件事：讓症狀暫時消失，不等於身體真的恢復。我想做的，是幫身體重新學會照顧自己——用它聽得懂的語言，草本。」<footer>— 黃醫師</footer></blockquote>
+  <p>黃醫師是中國中西醫結合執業醫師，中醫全科醫師，擁有二十年臨床經驗與草本配方研發專長。她師從多位國家級名老中醫、各科教授與清末御醫傳人，學習中醫針藥特色療法；作為全科中醫師，臨床涉及內科、皮膚科、婦科、兒科，對消化系統疾病、心理睡眠疾病、神經系統疾病、呼吸系統疾病、循環系統疾病、泌尿生殖系統疾病、皮膚科常見病與痛症等均有豐富的臨床經驗，並專研中醫醫美二十年，自主研發的中藥化妝品曾獲國家發明專利。</p>
+  <blockquote>「中醫講治未病，在身體逐漸衰老的過程中會發生很多衰老相關的疾病，中醫抗衰就顯得尤為重要。很多時候讓症狀暫時消失，不等於身體真的恢復。我想做的，是幫身體重新找回自己健康的狀態——用承傳千年的草本經驗，幫助身體恢復平衡。」<footer>— 黃醫師</footer></blockquote>
   <ul class="checks"><li><div>生產設施具 FDA 登記<small>核查企業與生產設施的 FDA 登記資訊（登記不等於 FDA 核准）</small></div></li><li><div>天然／有機來源成分<small>優先選擇來源清楚的草本與植物成分</small></div></li><li><div>專業經驗配方<small>以臨床觀點對應現代人的常見日常需求</small></div></li><li><div>品質安全把關<small>原料、生產、第三方純度檢測三道關卡</small></div></li><li><div>價格合理親民<small>讓長期保健更容易持續</small></div></li><li><div>只說有依據的事<small>不誇大、不神化草本、不製造焦慮</small></div></li></ul></div>
 </div></section>
 <section class="sec"><div class="wrap">
@@ -759,7 +759,7 @@ def build_about():
 {journey(rel,'about')}
 {sticky(rel)}
 '''
-    write('about.html', head('關於優健堂與黃醫師｜品牌理念、品質把關 · 優健堂 UHealthFit × WiseQuest','優健堂 UHealthFit 由美國紐約 Uhealth Trading Inc. 經營；WiseQuest 草本保健系列由紐約州持照針灸師黃醫師研發。尊重自然、尊重專業、關懷每一個人、分享知識。',rel,'about.html','about')+nav(rel,'about')+body+footer(rel))
+    write('about.html', head('關於優健堂與黃醫師｜品牌理念、品質把關 · 優健堂 UHealthFit × WiseQuest','優健堂 UHealthFit 由美國紐約 Uhealth Trading Inc. 經營；WiseQuest 草本保健系列由中國中西醫結合執業醫師黃醫師研發。尊重自然、尊重專業、關懷每一個人、分享知識。',rel,'about.html','about')+nav(rel,'about')+body+footer(rel))
 
 FAQS = {
  '產品與使用':[('這些產品是藥嗎？可以取代我現在的治療或藥物嗎？','不是。膠囊類為膳食補充劑，乳霜、精華液與眼貼為日常保養品，都不是藥品，也不能取代醫師的診斷、治療或處方。若你正在服藥、懷孕或哺乳、或有任何健康疑慮，請在使用前先諮詢醫師或藥師。'),('多久會有感覺？','草本日常養護是累積型的。多數人會先在前幾週感受到使用時的舒適感，整體狀態的穩定通常需要給自己至少 4–8 週。效果因人而異，我們不做任何時效或結果的保證。'),('膠囊怎麼吃？需要一直吃下去嗎？','每瓶 180 粒約一個月份，建議每天兩次、每次三粒，隨餐服用（Calmoon 建議午餐後與睡前一小時）。全植物膠囊、全素。我們的設計原則是「不依賴」：狀態穩定後可以鞏固一段時間再停用。'),('可以同時用好幾個系列嗎？','可以依需要搭配（例如護眼三寶）。若同時使用多種補充劑或正在服藥，請先與醫師或藥師討論。'),('眼貼會進到眼睛裡嗎？會過敏嗎？','眼貼貼在眼周肌膚上，不入眼。日本製造、不含防腐劑，過敏回報極少（依品牌內部客服紀錄）。第一次使用前建議先做局部皮膚測試；孕婦請勿使用。')],
