@@ -782,7 +782,7 @@ def build_products():
         if p.get('trial_handle'):
             trial=f'<a class="btn btn-ghost btn-block ext" style="margin-top:8px" data-product="{slug}-trial" href="{shop_url(p["trial_handle"])}">先從 $6 兩晚體驗裝開始</a>'
         oos='<p class="note" style="margin-top:10px;color:#B84F08"><b>目前補貨中。</b>商品頁會顯示最新庫存狀態；也可以先讀選購指南，或看同系列的其他產品。</p>' if p.get('oos') else ''
-        buy_label='前往護眼三寶組合頁' if p.get('is_bundle') else ('查看補貨狀態' if p.get('oos') else '前往 zh.uhealthfit.com 購買')
+        buy_label='前往護眼三寶組合頁' if p.get('is_bundle') else ('查看補貨狀態' if p.get('oos') else '立即購買')
         cross=''.join(product_card(c,rel) for c in p['cross'])
         yes=''.join(f'<li>{esc(x)}</li>' for x in p['yes']); no=''.join(f'<li>{esc(x)}</li>' for x in p['no'])
         posts=[q for q in POSTS if q['series']==p['series']]
