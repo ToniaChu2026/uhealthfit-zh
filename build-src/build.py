@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """優健堂 UHealthFit × WiseQuest 靜態網站產生器 · NTD Digital 2026-10-19
 位置：repo/build-src/build.py　執行：python3 build-src/build.py　→ 直接輸出到 repo 根目錄（GitHub Pages 的發布根）
-改文案的地方：本檔的 SERIES / PRODUCTS / QUIZ / FAQS 資料區、posts/ 內的 12 篇文章、src/style.css、src/main.js
+改文案的地方：本檔的 SERIES / PRODUCTS / QUIZ / FAQS 資料區、posts/ 內的選購指南文章、src/style.css、src/main.js
 """
 import json, os, re, shutil, hashlib, html as H
 from urllib.parse import quote
@@ -22,6 +22,11 @@ def shop_img(path, width=800):
     return f'{SHOP_CDN}/{path}&width={width}'
 KLAVIYO_COMPANY = 'Xxa5rp'
 KLAVIYO_LIST = 'TKC3Bu'
+# 測驗結果頁的免費電子書（PDF 放在 repo 根目錄 downloads/；護眼結果送護眼指南，其餘送身體調養指南）
+EBOOKS = {
+  'eye-care': {'title':'螢幕族護眼自救指南','file':'downloads/wisequest-eye-care-guide.pdf'},
+  'body-balance': {'title':'現代人身體調養指南','file':'downloads/wisequest-body-balance-guide.pdf'},
+}
 TODAY = '2026-10-19'
 
 def shop_url(handle):
@@ -577,10 +582,37 @@ def product_card(slug, rel, wide=False):
   </div>
 </article>'''
 
+
+# ───── 選購指南縮圖：參考 zh.uhealthfit.com 博客文章配圖（2026-10-22 挑選），每篇一張、不重複 ─────
+# 未採用疾病聯想太強的畫面（看診、抓癢、馬桶等）；找不到合適的才用商品或品牌情境圖。
+def _blog_img(path, width=900): return f'{SHOP_CDN}/articles/{path}&width={width}'
+POST_IMAGES = {
+ 'eye-patch-vs-steam-mask-vs-eye-drops': _blog_img('6e79cd1e0b94426229c58cc80bb26721_b8d47d89-ece5-4fcb-93c1-02afc98f393b.jpg?v=1784110970'),
+ 'beyond-lutein-eye-care':               _blog_img('c9dac13fffc18fd3e639d59e46699f14_17d6bb59-7edc-4ac0-b61e-988c0d3affaf.jpg?v=1784729594'),
+ 'eye-patch-how-to-use-guide':           _blog_img('3C.webp?v=1784445802'),
+ 'eye-care-gift-for-parents':            f'{IMG}/_optimized/concerns/eye-care-1200.avif',
+ 'eye-patch-ingredients-explained':      shop_img('files/XXT36536.jpg?v=1781960015', 900),
+ 'melatonin-free-sleep-aid-guide':       _blog_img('0061e896aaa054d2a26531e15f4665f1_26556a12-6c00-445d-9748-6e292f9c592b.jpg?v=1784729443'),
+ 'stress-daytime-relax-night-sleep':     _blog_img('Uhealth_3_04ff309d-c7e1-4ba4-a9c8-c2569c80fabd.jpg?v=1788305863'),
+ 'gentle-digestive-support-no-senna':    shop_img('files/26ffef70cacb47ecb0b0b1e2fc667031_3eb53544-8644-47c2-85e1-519efa90b88c.jpg?v=1782815981', 900),
+ 'bloating-after-sitting-herbal-flow':   _blog_img('4b833d8ed2df5069e87f5e67ab4884f8_aefba7d6-6c86-43f1-bd05-37e3c8d97b95.jpg?v=1784730659'),
+ 'gum-care-supplement-for-parents':      _blog_img('Uhealth_1_4a866430-080b-436c-9675-5b00208bb3f5.jpg?v=1787836791'),
+ 'brushing-plus-herbal-support':         _blog_img('Uhealth_3_7a272e3f-62f2-47fc-bb99-68481a91a46a.jpg?v=1790149469'),
+ 'steroid-free-soothing-cream-guide':    _blog_img('75d0c6b723e108b98dba5d9e3a358a41.webp?v=1784443184'),
+ 'acne-prone-skin-herbal-cream-guide':   _blog_img('6b8903ce6bbb733467feb660618b47d6.jpg?v=1784124384'),
+ 'anti-fatigue-look-serum-guide':        shop_img('collections/4_0cd12e86-74cf-4588-b39b-7b5c570db219.jpg?v=1776886625', 900),
+ 'caffeine-free-energy-herbal-guide':    _blog_img('lumiview_concept.webp?v=1784112994'),
+ 'winter-tonic-herbal-guide':            _blog_img('1fe980194242617ee83bf7d924b9915f_31870d96-4aef-4f95-905c-ab096322e3d2.png?v=1790143942'),
+ 'gaozi-paste-vs-capsule':               'https://cdn.shopify.com/s/files/1/0676/4675/0818/files/c4001f0d-6d94-4413-9958-8a31fc2e4367.jpg?v=1786711467&width=900',  # zh 黑膏滋介紹頁主圖：膠囊瓶與草本切片
+ 'american-ginseng-vs-ginseng':          f'{IMG}/blog/botanical-wellness-hero.png',
+}
+def post_image(p):
+    if p['slug'] in POST_IMAGES: return POST_IMAGES[p['slug']]
+    return SERIES[p['series']]['photo']
+
 def post_card(p, rel):
     prod=PRODUCTS[p['primary_product']]; s=SERIES[p['series']]
-    same=[q for q in POSTS if q['series']==p['series']]
-    thumb = s['photo'] if same.index(p)%2==0 else prod['image']  # 同系列第一篇用情境照、第二篇用產品實拍，避免縮圖重複
+    thumb = post_image(p)
     return f'''<article class="post-card s-{p['series']}" data-series="{p['series']}">
   <a class="thumb" href="{rel}blog/{p['slug']}.html"><img src="{thumb}" alt="" loading="lazy"></a>
   <div class="body"><div class="meta"><span class="series-tag s-{p['series']}"><span class="dot"></span>{s['name']}</span><span>· 約 {p['reading_min']} 分鐘</span></div>
@@ -650,7 +682,7 @@ def build_home():
 <section class="sec bg-green-light"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">選購指南</span><h2>先懂怎麼選，再決定要不要買</h2><p class="lead">我們把每個系列「市面上有哪些選項、各自負責什麼、選購時該看什麼」寫成指南。就算最後沒有購買，也希望你更懂自己的身體。</p></div>
   <div class="bgrid">{posts}</div>
-  <p style="margin-top:22px"><a class="btn btn-ghost" href="blog/index.html">看全部 12 篇選購指南</a></p>
+  <p style="margin-top:22px"><a class="btn btn-ghost" href="blog/index.html">看全部 {len(POSTS)} 篇選購指南</a></p>
 </div></section>
 
 <section class="sec doctor bg-dark"><div class="wrap">
@@ -812,19 +844,19 @@ def build_blog():
     body=f'''
 <section class="hero"><div class="wrap" style="grid-template-columns:1fr"><div>
   <div class="crumbs"><a href="{rel}index.html">首頁</a><span>›</span><span>選購指南</span></div>
-  <span class="eyebrow">選購指南 · 12 篇</span><h1>先懂怎麼選，再決定要不要買</h1>
+  <span class="eyebrow">選購指南 · {len(POSTS)} 篇</span><h1>先懂怎麼選，再決定要不要買</h1>
   <p class="lead" style="max-width:760px">我們把每個系列「市面上有哪些選項、各自負責什麼、選購時該看什麼、怎麼開始」寫成指南。每篇都誠實交代時間與不適合的人。就算最後沒有購買，也希望你更懂自己的身體、少一點焦慮。</p>
 </div></div></section>
 <section class="sec"><div class="wrap">{chips}<div class="bgrid">{cards}</div></div></section>
 {journey(rel,'quiz')}
 {sticky(rel)}
 '''
-    write('blog/index.html', head('選購指南｜護眼、固齒、睡眠、消化、肌膚、活力怎麼選 · 優健堂 × WiseQuest','12 篇草本保健選購指南：眼貼 vs 蒸氣眼罩、無褪黑素助眠、不含番瀉葉腸道保健、無類固醇修護霜、幫爸媽選口腔保健品……先懂怎麼選，再決定要不要買。',rel,'blog/index.html','blog')+nav(rel,'blog')+body+footer(rel))
+    write('blog/index.html', head('選購指南｜護眼、固齒、睡眠、消化、肌膚、活力怎麼選 · 優健堂 × WiseQuest',f'{len(POSTS)} 篇草本保健選購指南：眼貼 vs 蒸氣眼罩、無褪黑素助眠、不含番瀉葉腸道保健、無類固醇修護霜、幫爸媽選口腔保健品……先懂怎麼選，再決定要不要買。',rel,'blog/index.html','blog')+nav(rel,'blog')+body+footer(rel))
     for p in POSTS:
         prod=PRODUCTS[p['primary_product']]; s=SERIES[p['series']]
         related=''.join(post_card(q,rel) for q in POSTS if q['slug']!=p['slug'] and q['series']==p['series'])
         more=''.join(post_card(q,rel) for q in POSTS if q['series']!=p['series'])[:0]
-        ld=json.dumps({"@context":"https://schema.org","@type":"Article","headline":p['title'],"description":p['description'],"image":prod['image'],"datePublished":TODAY,"author":{"@type":"Organization","name":"優健堂 UHealthFit"},"publisher":{"@type":"Organization","name":"優健堂 UHealthFit","logo":{"@type":"ImageObject","url":LOGO}}},ensure_ascii=False)
+        ld=json.dumps({"@context":"https://schema.org","@type":"Article","headline":p['title'],"description":p['description'],"image":post_image(p),"datePublished":TODAY,"author":{"@type":"Organization","name":"優健堂 UHealthFit"},"publisher":{"@type":"Organization","name":"優健堂 UHealthFit","logo":{"@type":"ImageObject","url":LOGO}}},ensure_ascii=False)
         body=f'''
 <section class="sec" style="padding-top:clamp(28px,4vw,52px)"><div class="wrap">
   <div class="article-head">
@@ -850,7 +882,7 @@ def build_blog():
 {sticky(rel)}
 <script type="application/ld+json">{ld}</script>
 '''
-        write(f'blog/{p["slug"]}.html', head(f'{p["title"]} · 優健堂 × WiseQuest', p['description'], rel, f'blog/{p["slug"]}.html', f'blog-{p["slug"]}', og_image=prod['image'])+nav(rel,'blog')+body+footer(rel))
+        write(f'blog/{p["slug"]}.html', head(f'{p["title"]} · 優健堂 × WiseQuest', p['description'], rel, f'blog/{p["slug"]}.html', f'blog-{p["slug"]}', og_image=post_image(p))+nav(rel,'blog')+body+footer(rel))
 
 # ───────────────────────────── 測驗 ─────────────────────────────
 QUIZ = [
@@ -863,6 +895,7 @@ QUIZ = [
 ]
 def build_quiz():
     rel=''
+    EBOOKS_JSON=esc(json.dumps({k:{'title':v['title'],'url':f"{SITE_URL}/{v['file']}"} for k,v in EBOOKS.items()},ensure_ascii=False))
     steps=''
     for i,(q,opts) in enumerate(QUIZ):
         btns=''.join(f'<button type="button" data-w=\'{json.dumps(w,ensure_ascii=False)}\'><span class="l">{"ABCD"[j]}</span><span>{esc(t)}</span></button>' for j,(t,w) in enumerate(opts))
@@ -884,7 +917,7 @@ def build_quiz():
     body=f'''
 <section class="hero"><div class="wrap" style="grid-template-columns:1fr"><div style="text-align:center;max-width:760px;margin:0 auto">
   <span class="eyebrow">30 秒測驗 · 6 題</span><h1>找到最值得先開始的那一件事</h1>
-  <p class="lead">同時在意好幾件事很正常。這 6 題幫你排序，結果會直接對應到系列、產品與選購指南。不需註冊、結果立即顯示；僅供參考，不作為醫療診斷。</p>
+  <p class="lead">同時在意好幾件事很正常。這 6 題幫你排序，結果會直接對應到系列、產品與選購指南。不需註冊、結果立即顯示；完成後還可以免費領取黃醫師的電子書指南。僅供參考，不作為醫療診斷。</p>
 </div></div></section>
 <section class="sec" style="padding-top:0;margin-top:-20px"><div class="wrap"><div class="quiz-wrap"><div class="qcard" id="quiz">
   <div class="qprog"><i></i></div>
@@ -892,10 +925,18 @@ def build_quiz():
   <div class="qresult">
     {results}
     <p class="note" style="margin-top:6px">{second} 結果依你的回答排序，僅供參考。</p>
-    <div class="email-box"><b>想把結果與對應的選購指南寄到信箱？</b>
-      <form data-klaviyo-company="{KLAVIYO_COMPANY}" data-klaviyo-list="{KLAVIYO_LIST}" novalidate><input type="hidden" name="quiz_result" value=""><input type="email" name="email" placeholder="你的 Email" required aria-label="Email"><button class="btn btn-primary btn-sm" type="submit">寄給我</button></form>
+    <div class="email-box ebook-box">
+      <div class="ebook-row">
+        <div class="ebook-pic"><img data-eb="eye-care" src="{rel}downloads/eye-care-guide-cover.jpg" alt="《螢幕族護眼自救指南》封面" width="240" height="320" loading="lazy"><img data-eb="body-balance" src="{rel}downloads/body-balance-guide-cover.jpg" alt="《現代人身體調養指南》封面" width="240" height="320" loading="lazy" style="display:none"></div>
+        <div class="ebook-copy"><span class="eyebrow">免費電子書 · 黃醫師</span>
+          <div data-eb="eye-care"><h4>《螢幕族護眼自救指南》</h4><ul><li>眼睛為什麼越來越累：眨眼、過熱、眼藥水三個關鍵</li><li>門診最常見的 5 個護眼誤區</li><li>4 種用眼類型對照，加上居家養護小貼士</li></ul></div>
+          <div data-eb="body-balance" style="display:none"><h4>《現代人身體調養指南》</h4><ul><li>眼睛、睡眠、腸胃、生活：四大面向 16 項身體訊號清單</li><li>對照你的狀態，知道這個月該先照顧哪裡</li><li>七天微調養計畫，小到一定做得到</li></ul></div>
+          <p class="ebook-note">留下 Email，指南 PDF 會連同你的測驗結果寄到信箱。</p>
+        </div>
+      </div>
+      <form data-klaviyo-company="{KLAVIYO_COMPANY}" data-klaviyo-list="{KLAVIYO_LIST}" data-ebooks='{EBOOKS_JSON}' novalidate><input type="hidden" name="quiz_result" value=""><input type="hidden" name="lead_magnet" value="body-balance"><input type="email" name="email" placeholder="你的 Email" required aria-label="Email"><button class="btn btn-primary btn-sm" type="submit">免費寄給我</button></form>
       <p class="consent">送出即表示你同意收到優健堂的健康養護內容與會員優惠 Email，可隨時取消訂閱。我們不會把你的資料提供給第三方。詳見 <a class="ext" href="https://zh.uhealthfit.com/zh-hant-us/policies/privacy-policy" style="text-decoration:underline">隱私權政策</a>。</p>
-      <div class="email-ok">✓ 已收到！稍後請留意信箱。</div>
+      <div class="email-ok">✓ 已寄出！請留意信箱（沒看到的話，查看一下垃圾郵件匣）。也可以<a class="ebook-dl" href="#" target="_blank" rel="noopener">現在直接下載 PDF →</a></div>
     </div>
   </div>
   <div class="qnav"><button type="button" class="qback" style="visibility:hidden">← 上一題</button><span class="note">僅供參考 · 非醫療診斷</span></div>
@@ -975,7 +1016,7 @@ def build_misc():
 製作：NTD Digital · {TODAY}
 
 ## 結構
-- index.html 首頁 ｜ series/ 六大系列頁 ｜ products/ 11 個單品／組合頁 ｜ blog/ 選購指南首頁＋12 篇
+- index.html 首頁 ｜ series/ 六大系列頁 ｜ products/ 11 個單品／組合頁 ｜ blog/ 選購指南首頁＋{len(POSTS)} 篇
 - quiz.html 30 秒測驗（結果→系列／產品／指南；Email 留資送 Klaviyo Email List）｜ about.html ｜ faq.html
 - css/style.css、js/main.js 共用 ｜ sitemap.xml、robots.txt
 

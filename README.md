@@ -2,7 +2,7 @@
 製作：NTD Digital · 2026-10-19
 
 ## 結構
-- index.html 首頁 ｜ series/ 六大系列頁 ｜ products/ 11 個單品／組合頁 ｜ blog/ 選購指南首頁＋12 篇
+- index.html 首頁 ｜ series/ 六大系列頁 ｜ products/ 11 個單品／組合頁 ｜ blog/ 選購指南首頁＋18 篇
 - quiz.html 30 秒測驗（結果→系列／產品／指南；Email 留資送 Klaviyo Email List）｜ about.html ｜ faq.html
 - css/style.css、js/main.js 共用 ｜ sitemap.xml、robots.txt
 

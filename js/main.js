@@ -61,6 +61,9 @@
       result.querySelectorAll('[data-r]').forEach(function(el){el.style.display=el.getAttribute('data-r')===top?'':'none';});
       result.querySelectorAll('[data-r2]').forEach(function(el){el.style.display=el.getAttribute('data-r2')===second?'':'none';});
       var hid=result.querySelector('input[name="quiz_result"]'); if(hid){hid.value=top+'|'+second;}
+      var eb=(top==='eye')?'eye-care':'body-balance';
+      result.querySelectorAll('[data-eb]').forEach(function(el){el.style.display=el.getAttribute('data-eb')===eb?'':'none';});
+      var lm=result.querySelector('input[name="lead_magnet"]'); if(lm){lm.value=eb;}
       result.classList.add('on'); if(back)back.style.visibility='hidden';
       result.scrollIntoView({behavior:'smooth',block:'start'});
       if(window.gtag){gtag('event','quiz_complete',{result:top});}
@@ -76,12 +79,23 @@
       var email=form.querySelector('input[type=email]').value.trim(); if(!email) return;
       var company=form.getAttribute('data-klaviyo-company'), list=form.getAttribute('data-klaviyo-list');
       var props={source:'uhealthfit-site/'+page}; var r=form.querySelector('input[name="quiz_result"]'); if(r&&r.value){props.quiz_result=r.value;}
+      var lmIn=form.querySelector('input[name="lead_magnet"]'), lmKey=lmIn?lmIn.value:'', ebooks={}; try{ebooks=JSON.parse(form.getAttribute('data-ebooks')||'{}');}catch(e){}
+      var ebook=ebooks[lmKey]; if(ebook){props.lead_magnet=lmKey;}
       var body={data:{type:'subscription',attributes:{custom_source:'uhealthfit-site '+page,profile:{data:{type:'profile',attributes:{email:email,properties:props}}}},relationships:{list:{data:{type:'list',id:list}}}}};
       var btn=form.querySelector('button'); btn.disabled=true;
       fetch('https://a.klaviyo.com/client/subscriptions/?company_id='+encodeURIComponent(company),{method:'POST',headers:{'Content-Type':'application/json','revision':'2024-10-15'},body:JSON.stringify(body)})
       .then(function(res){ if(res.status===202||res.ok){done();} else {throw new Error('status '+res.status);} })
       .catch(function(){ btn.disabled=false; toast('暫時無法送出，請稍後再試，或來信 service@uhealthfit.com'); });
-      function done(){form.style.display='none';var ok=form.parentNode.querySelector('.email-ok');if(ok){ok.style.display='block';}if(window.gtag){gtag('event','generate_lead',{method:'quiz_email'});}}
+      function done(){
+        form.style.display='none';var ok=form.parentNode.querySelector('.email-ok');
+        if(ok){ok.style.display='block';var dl=ok.querySelector('.ebook-dl');if(dl){if(ebook){dl.href=ebook.url;}else{dl.style.display='none';}}}
+        if(ebook){ // 觸發 Klaviyo「Requested Quiz Ebook」事件，由 Flow 寄出對應的電子書
+          var ev={data:{type:'event',attributes:{properties:{ebook:lmKey,ebook_title:ebook.title,ebook_url:ebook.url,quiz_result:props.quiz_result||''},metric:{data:{type:'metric',attributes:{name:'Requested Quiz Ebook'}}},profile:{data:{type:'profile',attributes:{email:email,properties:props}}}}}};
+          fetch('https://a.klaviyo.com/client/events/?company_id='+encodeURIComponent(company),{method:'POST',headers:{'Content-Type':'application/json','revision':'2024-10-15'},body:JSON.stringify(ev)}).catch(function(){});
+        }
+        if(window.gtag){gtag('event','generate_lead',{method:'quiz_email',lead_magnet:lmKey||'none'});}
+        if(window.fbq){fbq('track','Lead',{content_name:lmKey||'quiz_email'});}
+      }
     });
   }
   // 系列頁頁首輪播：箭頭、圓點、滑動、約 6 秒自動切換（滑鼠移入或觸控時暫停）
