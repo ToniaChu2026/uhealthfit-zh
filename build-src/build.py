@@ -135,7 +135,7 @@ PRODUCTS = {
    variants=[('1 瓶','$269','',True),('2 瓶','$511.10','',False),('3 瓶','$686','單瓶成本最低',False)], trial_handle=None,
    yes=['35–55 歲、想為牙齦長期健康多做一點的人','替父母準備日常口腔保養的子女','重視成分公開、美國製造的人'], no=['正在接受牙科治療者（請先詢問牙醫）','孕婦、哺乳期（請先諮詢醫師）','對配方任一成分過敏者'],
    faq=[('可以取代看牙醫嗎？','不能。這是膳食補充劑，不是藥品；請持續定期牙科檢查。'),('要吃多久？','建議至少 4–8 週，作為長期管理的一部分；效果因人而異。'),('長輩吃方便嗎？','全植物膠囊、隨餐服用，放在早餐旁邊最容易記得，不需要家人在旁盯著。')],
-   image=shop_img('files/ChatGPT_Image_2026_3_28_11_46_22.png?v=1776263240'), cross=['herbalflow','calmoon','lumiview']),
+   image=f'{IMG}/_optimized/products/dentaforte/dentaforte-product-shot-wide-1200.avif', cross=['herbalflow','calmoon','lumiview']),
  'calmoon': dict(series='sleep', name='Calmoon 安睡草本膠囊', en='Herbal Sleep Support Capsules', badge=None,
    hook='白天放鬆，夜裡好眠', desc='不含褪黑素的草本安神配方。午後與睡前各一次，先幫忙放下白天的緊繃，支持自然的睡眠節律。狀態穩定後可停用。',
    long='夜裡難以放鬆，常常不是夜晚的問題，而是白天沒有「下線」。中醫傳統認為「心主神明」——Calmoon 以炒酸棗仁、合歡皮、茯神、百合、刺五加、丹參、夏枯草七味草本，先安撫白天的壓力，支持身體進入夜間的恢復狀態。不含褪黑素，狀態穩定後可以停用。',
@@ -271,6 +271,11 @@ def series_hero(k, rel):
 </section>
 '''
 
+def og_png(url):
+    # 社群分享預覽不支援 AVIF：把 uhealthfit.com 的 _optimized/...-1200.avif 換回原始 PNG
+    m=re.match(r'(https://uhealthfit\.com)/_optimized/(.+)-\d+\.avif$', url)
+    return f'{m.group(1)}/{m.group(2)}.png' if m else url
+
 def head(title, desc, rel, canonical_path, page_id, og_image=None, extra=''):
     return f'''<!DOCTYPE html>
 <html lang="zh-Hant">
@@ -283,7 +288,7 @@ def head(title, desc, rel, canonical_path, page_id, og_image=None, extra=''):
 <meta property="og:type" content="website">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
-<meta property="og:image" content="{og_image or IMG + '/home/all-products-lineup.png'}">
+<meta property="og:image" content="{og_png(og_image) if og_image else IMG + '/home/all-products-lineup.png'}">
 <meta property="og:locale" content="zh_TW">
 <link rel="icon" href="{LOGO}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
