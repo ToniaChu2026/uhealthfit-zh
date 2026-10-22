@@ -200,7 +200,7 @@ for fn in sorted(os.listdir(os.path.join(ROOT,'posts'))):
     meta, body = s.split('---END-META---',1)
     m = json.loads(meta.strip()); m['body'] = body.strip(); POSTS.append(m)
 POST_BY_SLUG = {p['slug']:p for p in POSTS}
-POST_ORDER = ['eye-patch-vs-steam-mask-vs-eye-drops','beyond-lutein-eye-care','melatonin-free-sleep-aid-guide','stress-daytime-relax-night-sleep','gentle-digestive-support-no-senna','bloating-after-sitting-herbal-flow','gum-care-supplement-for-parents','brushing-plus-herbal-support','steroid-free-soothing-cream-guide','acne-prone-skin-herbal-cream-guide','anti-fatigue-look-serum-guide','caffeine-free-energy-herbal-guide']
+POST_ORDER = ['eye-patch-vs-steam-mask-vs-eye-drops','beyond-lutein-eye-care','eye-patch-how-to-use-guide','eye-care-gift-for-parents','eye-patch-ingredients-explained','melatonin-free-sleep-aid-guide','stress-daytime-relax-night-sleep','gentle-digestive-support-no-senna','bloating-after-sitting-herbal-flow','gum-care-supplement-for-parents','brushing-plus-herbal-support','steroid-free-soothing-cream-guide','acne-prone-skin-herbal-cream-guide','anti-fatigue-look-serum-guide','caffeine-free-energy-herbal-guide','winter-tonic-herbal-guide','gaozi-paste-vs-capsule','american-ginseng-vs-ginseng']
 POSTS = [POST_BY_SLUG[s] for s in POST_ORDER]
 
 # ───────────────────────────── 共用片段 ─────────────────────────────
@@ -328,6 +328,124 @@ def demo_section(slug):
   <div class="demo-video"><video src="{d['src']}#t=0.5" controls muted playsinline preload="metadata" aria-label="{esc(d['title'])}（使用示範影片）"></video></div>
   <div><span class="eyebrow">使用示範</span><h2>{esc(d['title'])}</h2><ol class="demo-steps">{steps}</ol>
     <p class="note">影片為使用方式示範；建議用量與注意事項，請以上方「用法與注意」為準。</p></div>
+</div></section>
+'''
+
+
+# ───── 成分解析：改寫自 zh.uhealthfit.com 各產品頁的成分說明（2026-10-22 擷取），依 BRIEF.md 合規紅線改寫 ─────
+# 原則：中醫概念以「中醫傳統認為／傳統上用於」表述；不寫疾病名稱、不用療效動詞；外用品只描述使用感受與外觀。
+# 眼貼、固齒膠囊的成分清單在商店不同頁面互相矛盾，待客戶確認後再補，這裡暫不收。
+INGREDIENTS = {
+ 'calmoon': dict(
+   title='七味草本，依「君臣佐使」分工',
+   intro='中醫方劑講究「君臣佐使」：君藥定方向，臣藥輔助君藥，佐藥從旁協調，使藥調和諸藥。Calmoon 的七味草本依這套傳統結構配伍，不靠單一成分，而是讓每一味各司其職。',
+   items=[('君','炒酸棗仁','中醫傳統上用於養心安神，是整個配方的核心，決定「幫助身心放鬆、支持自然睡眠節律」的方向。'),
+          ('臣','合歡皮','傳統上用於舒緩情緒，幫助身心放鬆下來。'),
+          ('臣','刺五加','傳統上用於幫助身體因應日常壓力，支持白天的精神狀態。'),
+          ('佐','茯神','傳統上用於寧心安神，溫和支持夜晚的放鬆。'),
+          ('佐','百合','中醫常見的清補草本，傳統上用於滋養身心。'),
+          ('佐','丹參','傳統上用於養血安神，在配方中與其他草本協同。'),
+          ('使','夏枯草','中醫傳統認為可清肝火；在配方中負責調和寒熱，讓整體更平和、適合日常持續使用。')],
+   facts=[('建議用法','午餐後與晚餐後各 3 粒'),('規格','180 粒／瓶'),('不含','褪黑素'),('劑型','全植物膠囊（全素）、無麩質')]),
+ 'enerbalance': dict(
+   title='七味草本，依「君臣佐使」分工',
+   intro='傳統膏方常見的七味草本配伍，依「君臣佐使」設計：一溫一涼的補氣組合打底，再以健脾、養血、調和的草本平衡，讓配方更平和、更適合日常持續。',
+   items=[('君','西洋參','中醫傳統認為可益氣養陰，性偏涼，支持日常的活力狀態。'),
+          ('君','黃芪','傳統上用於補氣，性偏溫；與西洋參一溫一涼，讓整體藥性平和。'),
+          ('臣','山藥','傳統上用於健脾補氣，補而不膩，讓配方更容易長期使用。'),
+          ('臣','陳皮','傳統上用於理氣健脾，平衡西洋參偏滋潤的特性。'),
+          ('佐','當歸','傳統上用於養血。中醫講「氣血同補」，在補氣配方中負責養血。'),
+          ('使','菊花','性偏涼，傳統上作為清補配方中的調和草本。'),
+          ('使','玉米鬚','傳統上用於支持正常的水液代謝，讓配方補中有泄、更適合日常調養。')],
+   facts=[('每份','3 粒，約 1,500 毫克草本精粹'),('建議用法','每天 2 次，每次 3 粒，隨餐'),('規格','180 粒／瓶（60 份）'),('濃縮比例','5:1'),('不含','咖啡因、麩質、添加糖'),('製造','美國 cGMP 規範生產；生產設施具 FDA 登記（登記不等於 FDA 核准）')]),
+ 'herbalflow': dict(
+   title='六味草本：潤、行、清三路分工',
+   intro='HerbalFlow 不採用番瀉葉等刺激性成分，而是依中醫傳統的配伍思路，讓六味草本分成三組：一組負責「潤」，一組負責「行」，一組照顧腸道環境。',
+   items=[('潤','火麻仁（THC-Free）','配方核心。富含 Omega 脂肪酸，傳統上用於潤腸，幫助維持腸道潤滑。'),
+          ('潤','生地黃','傳統上用於養陰生津，幫助維持腸道的濕潤環境。'),
+          ('潤','當歸','傳統上用於養血潤燥，是中醫常見的溫和潤腸草本。'),
+          ('行','厚朴','傳統上用於行氣，幫助舒緩飯後的腹部飽脹感。'),
+          ('行','萊菔子','傳統上用於消食下氣，適合大餐、應酬後容易覺得飽脹的人日常調理。'),
+          ('清','馬齒莧','傳統上用於清熱、利水，幫助維持舒適、平衡的腸道環境。')],
+   facts=[('建議用法','每天 2 次，每次 3 粒，隨餐'),('規格','180 粒／瓶'),('不含','番瀉葉等刺激性成分'),('劑型','全植物膠囊')]),
+ 'lumiview': dict(
+   title='七味藥食同源草本，從整體支持',
+   intro='中醫傳統認為「肝開竅於目」「五臟六腑之精氣，皆上注於目」。LumiView 的七味草本從這個整體觀出發：枸杞、當歸、菊花偏重滋養肝腎；決明子、菊花偏重清肝；黃芪、當歸、茯苓、山藥則補益氣血。',
+   items=[('滋養','枸杞','中醫傳統認為可滋補肝腎、益精明目。'),
+          ('清肝','菊花','傳統上用於清肝明目，是常見的藥食同源草本。'),
+          ('清肝','決明子','傳統上用於清肝明目。'),
+          ('氣血','黃芪','傳統上用於補氣，支持整體的元氣。'),
+          ('氣血','當歸','傳統上用於養血活血。'),
+          ('氣血','山藥','傳統上用於益氣養陰，脾腎同養。'),
+          ('氣血','茯苓','傳統上用於健脾利濕。')],
+   facts=[('每份','3 粒，草本複合配方 1,500 毫克'),('建議用法','每天 2 次，每次 3 粒，隨餐'),('規格','180 粒／瓶'),
+          ('草本複合配方','決明子萃取物（Cassia obtusifolia）、枸杞子萃取物（Lycium barbarum）、菊花萃取物（Chrysanthemum indicum）、黃耆萃取物（Astragalus membranaceus）、山藥萃取物（Dioscorea opposita）、當歸萃取物（Angelica sinensis）、茯苓萃取物（Poria cocos）'),
+          ('其他成分','羥丙基甲基纖維素（植物膠囊）、硬脂酸鎂')]),
+ 'soothing-cream': dict(
+   title='七種東方植萃，加上三種保濕成分',
+   intro='東方草本搭配現代保濕成分，目的不是暫時蓋過不適，而是每天把肌膚的保濕與屏障照顧好。',
+   items=[('植萃','積雪草','現代護膚常見的舒緩植萃，幫助維持肌膚屏障，讓膚觸柔潤穩定。'),
+          ('植萃','紫草','傳統東方護膚成分，滋潤乾燥、脆弱的肌膚，保持柔潤。'),
+          ('植萃','蒲公英','幫助舒緩因環境變化而感覺不適的肌膚，維持舒適膚感。'),
+          ('植萃','白芷','東方美容傳統植萃，幫助肌膚看起來更細緻。'),
+          ('植萃','苦參','東方傳統草本護理成分，提供清爽的日常護理。'),
+          ('植萃','尤加利 × 薄荷','帶來清新、清涼的使用感受。'),
+          ('保濕','透明質酸','補水保濕，減少乾燥緊繃感。'),
+          ('保濕','維生素 E','抗氧化護理，幫助肌膚維持柔潤。'),
+          ('保濕','維生素 C 衍生物','幫助肌膚看起來更明亮。')],
+   facts=[('容量','30g'),('製造','美國製造'),('不含','類固醇'),('使用','臉部與身體皆可；首次使用請先在小範圍測試')]),
+ 'clarifying-cream': dict(
+   title='東方植萃 × 現代保養成分',
+   intro='為易出油、易長痘的肌膚設計的輕盈面霜：天然礦物泥負責清爽，東方植萃負責舒緩與滋養，再加上三種現代保養成分。',
+   items=[('清爽','皂土','天然礦物泥，幫助吸附多餘油脂，讓肌膚感覺清爽。'),
+          ('植萃','蒲公英油','舒緩外在環境對肌膚帶來的不適感。'),
+          ('植萃','金銀花油','傳統上用於清熱，幫助肌膚感覺舒緩、穩定。'),
+          ('植萃','丹參根油','幫助肌膚看起來氣色紅潤。'),
+          ('植萃','黨參根油','滋養肌膚。'),
+          ('植萃','紫草根油','東方傳統護膚成分，幫助維持肌膚屏障。'),
+          ('保養','維生素 C（SAP）','幫助肌膚看起來更明亮。'),
+          ('保養','維生素 A 酯（Retinyl Palmitate）','讓膚觸與毛孔看起來更平滑細緻。'),
+          ('保養','精氨酸（Arginine）','幫助肌膚保濕。')],
+   facts=[('容量','30g'),('製造','美國製造'),('不含','類固醇、人工香料、刺激性酸類'),('使用','早晚於精華液後，取適量塗抹於臉部與頸部')]),
+ 'eye-cream': dict(
+   title='六種草本，與眼貼、膠囊同源',
+   intro='眼霜沿用護眼系列同源的草本體系，做成輕透乳霜，讓不方便貼眼貼的白天，也能用指尖完成一次眼周保養。',
+   items=[('滋潤','石斛','中醫傳統上用於養陰，在配方中負責滋潤乾燥的眼周肌膚。'),
+          ('舒緩','菊花','傳統上用於清熱，帶來舒緩的使用感受。'),
+          ('舒緩','決明子','護眼系列同源的東方草本，與菊花搭配使用。'),
+          ('保濕','茯苓','傳統上用於健脾利濕；在眼霜中幫助眼周肌膚保持水潤。'),
+          ('光采','當歸根','東方傳統養顏草本，幫助眼周看起來更有光采。'),
+          ('清涼','尤加利葉精油','帶來清涼、提神的使用感受。')],
+   facts=[('容量','20g'),('製造','原料研發：日本；生產灌裝：美國'),('不含','苯氧乙醇、化學防腐劑、人工香精、合成色素、酒精'),('防護','採用氧化銀與植酸')]),
+ 'lifting-serum': dict(
+   title='五種東方草本 × 現代保養成分',
+   intro='東方草本負責滋養，現代保養成分負責保濕與彈性，做成清爽、好吸收的精華。',
+   items=[('草本','人參','東方傳統養顏草本，幫助肌膚看起來更有彈性。'),
+          ('草本','當歸','幫助肌膚看起來潤澤、有光采。'),
+          ('草本','白芍','幫助膚色看起來更均勻。'),
+          ('草本','茯苓','幫助肌膚保濕、維持清爽。'),
+          ('草本','積雪草','舒緩植萃，幫助肌膚維持穩定。'),
+          ('保養','胜肽','棕櫚醯三胜肽-1、棕櫚醯三胜肽-7，幫助肌膚看起來更緊緻。'),
+          ('保養','神經醯胺 NP','幫助維持肌膚屏障。'),
+          ('保養','透明質酸鈉','補水保濕。')],
+   facts=[('容量','30ml'),('使用','潔面後取 2–3 滴，輕輕按摩至吸收；早晚皆可')],
+   full='Water (Aqua), Glycerin, Caprylic/Capric Triglyceride, Limnanthes alba (Meadowfoam) Seed Oil, Squalane, Camellia sinensis Leaf Extract, Panax Ginseng Root Oil, Paeonia lactiflora Root Oil, Angelica sinensis Root Oil, Poria cocos Oil, Centella asiatica Oil, Glyceryl Stearate, Polysorbate 60, Polyglyceryl-10 Stearate, Bifida Ferment Lysate, Sodium Hyaluronate, Xanthan Gum, Palmitoyl Tripeptide-1, Palmitoyl Tripeptide-7, Ceramide NP, Bisabolol, Panthenol, Tetrahexyldecyl Ascorbate, Tocopherol, Dipotassium Glycyrrhizate, Parfum, Propanediol, Caprylhydroxamic Acid.'),
+}
+def ingredients_section(slug):
+    g=INGREDIENTS.get(slug)
+    if not g: return ''
+    p=PRODUCTS[slug]; capsule='膠囊' in p['name']
+    cards=''.join(f'<div class="ing"><span class="ing-role">{esc(r)}</span><h3>{esc(n)}</h3><p>{esc(t)}</p></div>' for r,n,t in g['items'])
+    facts=''.join(f'<li><b>{esc(k)}</b><span>{esc(v)}</span></li>' for k,v in g.get('facts',[]))
+    full=f'<details class="ing-full"><summary>完整成分表（INCI）</summary><p>{esc(g["full"])}</p></details>' if g.get('full') else ''
+    note=('以上為中醫傳統觀點的說明，用於理解配方設計，不是醫療效果的宣稱。本品為膳食補充劑，不是藥品。' if capsule
+          else '以上為成分在配方中的角色說明，描述的是使用感受與肌膚外觀。本品為日常保養品，不是藥品；首次使用請先做局部測試。')
+    return f'''<section class="sec"><div class="wrap">
+  <div class="sec-head"><span class="eyebrow">成分解析</span><h2>{esc(g['title'])}</h2><p class="lead" style="font-size:16px">{esc(g['intro'])}</p></div>
+  <div class="ing-grid">{cards}</div>
+  {f'<ul class="ing-facts">{facts}</ul>' if facts else ''}
+  {full}
+  <p class="note" style="margin-top:14px">{note}</p>
 </div></section>
 '''
 
@@ -664,7 +782,7 @@ def build_products():
   </div>
   <div class="timeline"><div class="ic">⏱</div><div><b>誠實的期待：</b>多數人會先在前幾週感受到使用時的舒適感，整體狀態的穩定通常需要給自己至少 4–8 週。效果因人而異；若一開始沒有太多感覺，這是正常的。</div></div>
 </div></section>
-{demo_section(slug)}
+{ingredients_section(slug)}{demo_section(slug)}
 <section class="sec"><div class="wrap">
   <div class="sec-head"><span class="eyebrow">適合誰</span><h2>這款適合你嗎？</h2></div>
   <div class="who"><div class="box yes"><h3>適合</h3><ul>{yes}</ul></div><div class="box no"><h3>不適合或請先諮詢醫師</h3><ul>{no}</ul></div></div>
