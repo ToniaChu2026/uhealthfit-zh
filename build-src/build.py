@@ -438,8 +438,7 @@ def build_home():
     <div class="hero-cta"><a class="btn btn-primary" href="quiz.html">30 秒找到我的起點</a><a class="btn btn-ghost" href="series/eye.html">直接看六大系列</a></div>
     <ul class="hero-trust"><li>無添加 · 非轉基因</li><li>第三方純度檢測</li><li>全植物膠囊 · 全素</li></ul>
   </div>
-  <div class="hero-visual"><picture><source srcset="{IMG}/_optimized/all-products-product-shot-wide-1200.avif" type="image/avif"><img src="{IMG}/home/all-products-lineup.png" alt="WiseQuest 全系列產品" width="1200" height="800" fetchpriority="high"></picture>
-    <div class="hero-chip chip-2"><b>6</b>大養護系列 · 11 款產品</div><div class="hero-chip chip-1"><b>$6</b>兩晚份眼貼試用裝</div></div>
+  <div class="hero-visual cutout"><picture><source type="image/avif" srcset="{IMG}/_optimized/all-products-product-shot-wide-800.avif 800w, {IMG}/_optimized/all-products-product-shot-wide-1200.avif 1200w, {IMG}/_optimized/all-products-product-shot-wide-1448.avif 1448w" sizes="(max-width:900px) 100vw, 600px"><source type="image/webp" srcset="{IMG}/_optimized/all-products-product-shot-wide-800.webp 800w, {IMG}/_optimized/all-products-product-shot-wide-1200.webp 1200w, {IMG}/_optimized/all-products-product-shot-wide-1448.webp 1448w" sizes="(max-width:900px) 100vw, 600px"><img src="{IMG}/all-products-product-shot-wide.png" alt="WiseQuest 全系列產品，膠囊瓶、乳霜罐、精華液與眼貼盒" width="1448" height="1086" fetchpriority="high"></picture></div>
 </div></section>
 <section class="trustbar" aria-label="品質保證"><div class="wrap"><ul>
   <li>美國・日本製造<small>cGMP 規範生產</small></li><li>第三方純度檢測<small>成品送驗</small></li><li>成分全部公開<small>每一味都查得到</small></li><li>無添加 · 非轉基因<small>無人工色素、防腐劑</small></li><li>執業醫師研發<small>二十年臨床經驗</small></li><li>30 天未拆封可退<small>service@uhealthfit.com</small></li>
