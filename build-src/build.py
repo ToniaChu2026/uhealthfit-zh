@@ -752,7 +752,7 @@ def build_series():
 </div></section>
 
 <section class="sec bg-green-light"><div class="wrap">
-  <div class="sec-head"><span class="eyebrow">選購指南</span><h2>關於{s['short']}，先讀這兩篇</h2></div>
+  <div class="sec-head"><span class="eyebrow">選購指南</span><h2>關於{s['short']}，先讀這幾篇</h2></div>
   <div class="bgrid">{posts}</div>
 </div></section>
 
