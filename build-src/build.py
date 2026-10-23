@@ -462,6 +462,28 @@ def ingredients_section(slug):
 </div></section>
 '''
 
+
+# ───── 追蹤碼：與 zh.uhealthfit.com 相同（2026-10-23 自商店頁面讀取）─────
+# GTM 容器 GTM-W58N8HRV：商店佈景主題裡的同一個容器（內含 GA4 Google 代碼但 send_page_view=false、點擊／表單事件、Ads 轉換連結器）
+# GA4 G-M63Z9F6FR7：商店經 Shopify Google 應用程式送網頁瀏覽；本站以 gtag.js 載入，負責網頁瀏覽與 main.js 的自訂事件
+# Meta Pixel 2216128798841618：商店經 Shopify Facebook 應用程式載入；本站以官方基本碼載入（GTM 容器內沒有 Pixel）
+GTM_ID = 'GTM-W58N8HRV'
+GA4_ID = 'G-M63Z9F6FR7'
+META_PIXEL_ID = '2216128798841618'
+# 載入順序很重要：gtag.js 必須在 GTM 之前。若 GTM 先載入，同一個 GA4 ID 只會保留 GTM 那份（send_page_view=false），
+# 本站的網頁瀏覽與自訂事件都不會送出（2026-10-23 實測）。gtag 先載入時，page_view 與各事件都只送一次，不重複。
+TRACKING_HEAD_TOP = ("<!-- Google tag (gtag.js) -->\n"
+  "<script async src=\"https://www.googletagmanager.com/gtag/js?id=__GA4__\"></script>\n"
+  "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','__GA4__');</script>\n"
+  "<!-- Google Tag Manager -->\n"
+  "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','__GTM__');</script>\n"
+  "<!-- End Google Tag Manager -->").replace('__GA4__', GA4_ID).replace('__GTM__', GTM_ID)
+TRACKING_HEAD_END = ("<!-- Meta Pixel -->\n"
+  "<script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','__PIXEL__');fbq('track','PageView');</script>\n"
+  "<!-- End Meta Pixel -->").replace('__PIXEL__', META_PIXEL_ID)
+TRACKING_BODY_TOP = ("<!-- Google Tag Manager (noscript) --><noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=__GTM__\" height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript>\n"
+  "<noscript><img height=\"1\" width=\"1\" style=\"display:none\" alt=\"\" src=\"https://www.facebook.com/tr?id=__PIXEL__&amp;ev=PageView&amp;noscript=1\"></noscript>").replace('__GTM__', GTM_ID).replace('__PIXEL__', META_PIXEL_ID)
+
 def og_png(url):
     # 社群分享預覽不支援 AVIF：把 uhealthfit.com 的 _optimized/...-1200.avif 換回原始 PNG
     m=re.match(r'(https://uhealthfit\.com)/_optimized/(.+)-\d+\.avif$', url)
@@ -473,6 +495,7 @@ def head(title, desc, rel, canonical_path, page_id, og_image=None, extra=''):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+{TRACKING_HEAD_TOP}
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
 <link rel="canonical" href="{page_url(canonical_path)}">
@@ -487,9 +510,10 @@ def head(title, desc, rel, canonical_path, page_id, og_image=None, extra=''):
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{rel}css/style.css?v={CSS_VER}">
 {extra}
-<!-- 上線前：在此插入 GTM / GA4 / Meta Pixel 容器 -->
+{TRACKING_HEAD_END}
 </head>
 <body data-page="{page_id}">
+{TRACKING_BODY_TOP}
 '''
 
 def nav(rel, active=''):
@@ -1034,7 +1058,7 @@ Cloudflare Pages：連結 GitHub repo 的 main 分支，push 後自動部署。�
 - Logo 與圖片：導覽列用 uhealthfit.com 的優健堂 SVG（LOGO）、頁尾用 zh.uhealthfit.com 商店頁首的 UHealthFit 白色字標（`build-src/src/img/`）；六大系列情境照與產品實拍取自 zh.uhealthfit.com（Shopify CDN，見 build.py 的 SHOP_CDN／shop_img，`&width=` 可調尺寸），其餘產品圖取自 uhealthfit.com
 上線前：
 1. 綁自訂網域後，把 build-src/build.py 的 SITE_URL 改成正式網域並重建；
-2. 在每頁 </head> 前插入 GTM／GA4／Meta Pixel（js/main.js 已會在購買點擊時送出 begin_checkout_redirect 與 ShopRedirect 事件、測驗完成送 quiz_complete、留資送 generate_lead）；
+2. 追蹤碼已安裝（build.py 的 GTM_ID／GA4_ID／META_PIXEL_ID，與 zh.uhealthfit.com 相同）：GTM GTM-W58N8HRV、GA4 G-M63Z9F6FR7（gtag.js）、Meta Pixel 2216128798841618。js/main.js 會在購買點擊時送出 begin_checkout_redirect 與 ShopRedirect、測驗完成送 quiz_complete、留資送 generate_lead 與 Lead；
 3. 所有「購買」按鈕都指向 zh.uhealthfit.com 商品頁並自動加上 utm_source=uhealthfit-site；
 4. Klaviyo：公開 company_id Xxa5rp、List TKC3Bu（Email List, single opt-in）；留資會帶 quiz_result 屬性，可用來建 Flow。
 '''
