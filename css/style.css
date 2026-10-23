@@ -70,7 +70,7 @@ h3{font-size:20px;font-weight:700}
 .menu-btn span::before{top:-6px}.menu-btn span::after{top:6px}
 .mobile-menu{display:none;background:#fff;border-bottom:1px solid var(--line)}
 .mobile-menu.open{display:block}
-.mobile-menu .wrap{padding:10px 20px 18px;display:grid;gap:4px}
+.mobile-menu .wrap{padding:10px 20px 18px;display:grid;gap:4px;height:auto}
 .mobile-menu a{display:block;padding:12px 10px;border-radius:10px;font-weight:600}
 .mobile-menu a:hover{background:var(--green-light)}
 .mobile-menu .sub{padding-left:14px;display:grid}

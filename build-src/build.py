@@ -493,11 +493,12 @@ def nav(rel, active=''):
     def a(href,label,key):
         cls = ' class="active"' if active==key else ''
         return f'<a href="{href}"{cls}>{label}</a>'
-    return f'''<div class="topbar">美國地區：眼貼滿 <b>USD $79</b>、其他商品滿 <b>USD $200</b> 免運 · 30 天內未拆封可退 · 於 zh.uhealthfit.com 安全結帳</div>
+    return f'''<div class="topbar">美國地區：眼貼滿 <b>USD $79</b>、其他商品滿 <b>USD $200</b> 免運 · 30 天內未拆封可退 · 官方商店安全結帳</div>
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="{rel}index.html" aria-label="優健堂 UHealthFit 首頁"><img src="{LOGO}" alt="優健堂 UHealthFit" width="101" height="34"></a>
     <nav aria-label="主選單"><ul class="nav-links">
+      <li>{a(rel+'index.html','主頁','home')}</li>
       <li>{a(rel+'series/eye.html','六大系列','series')}<div class="dd">{dd}</div></li>
       <li>{a(rel+'blog/index.html','選購指南','blog')}</li>
       <li>{a(rel+'quiz.html','30 秒測驗','quiz')}</li>
@@ -507,7 +508,7 @@ def nav(rel, active=''):
     <div class="nav-cta"><a class="btn btn-primary btn-sm" href="{rel}series/eye.html">選購系列</a><button class="menu-btn" aria-label="開啟選單" aria-expanded="false"><span></span></button></div>
   </div>
   <div class="mobile-menu"><div class="wrap">
-    <a href="{rel}index.html">首頁</a>
+    <a href="{rel}index.html">主頁</a>
     <a href="{rel}series/eye.html">六大系列</a><div class="sub">{mob_sub}</div>
     <a href="{rel}blog/index.html">選購指南</a><a href="{rel}quiz.html">30 秒測驗</a><a href="{rel}about.html">關於與黃醫師</a><a href="{rel}faq.html">常見問題</a>
   </div></div>
@@ -697,7 +698,7 @@ def build_home():
 </div></section>
 
 <section class="sec"><div class="wrap">
-  <div class="sec-head"><span class="eyebrow">購買流程</span><h2>在這裡了解，到 zh.uhealthfit.com 安全結帳</h2><p class="lead">本站專注於幫你「選對」；按下購買後會前往我們的官方商店 zh.uhealthfit.com 完成結帳。整個流程三步：</p></div>
+  <div class="sec-head"><span class="eyebrow">購買流程</span><h2>在這裡了解，到官方商店安全結帳</h2><p class="lead">本站專注於幫你「選對」；按下購買後會前往我們的官方商店 zh.uhealthfit.com 完成結帳。整個流程三步：</p></div>
   <div class="steps">
     <div class="step"><div class="k">1</div><h3>在本站選好產品與規格</h3><p>看系列頁、單品頁與選購指南，確定適合自己的起點與用量。</p><div class="why">不確定？做 30 秒測驗。</div></div>
     <div class="step"><div class="k">2</div><h3>前往商店安全結帳</h3><p>按「購買」會開啟 zh.uhealthfit.com 商品頁；支援 Visa、Mastercard、Apple Pay、Google Pay、PayPal、Shop Pay 等。</p><div class="why">美國眼貼滿 $79、其他商品滿 $200 免運。</div></div>
@@ -748,7 +749,7 @@ def build_series():
 </div></section>
 
 <section class="sec" id="products"><div class="wrap">
-  <div class="sec-head"><span class="eyebrow">{s['name']} · 產品</span><h2>怎麼選、怎麼用</h2><p class="lead">價格為美金（USD），點「購買」前往 zh.uhealthfit.com 安全結帳；點「了解」看完整成分、用法與常見問題。</p></div>
+  <div class="sec-head"><span class="eyebrow">{s['name']} · 產品</span><h2>怎麼選、怎麼用</h2><p class="lead">價格為美金（USD），點「購買」前往官方商店安全結帳；點「了解」看完整成分、用法與常見問題。</p></div>
   <div class="pgrid{' pgrid-1' if len(s['products'])==1 else ''}">{cards}</div>
   {bundle}
   <p class="note" style="margin-top:18px;text-align:center">膠囊類為膳食補充劑、外用品為日常保養品，皆非藥品，不用於診斷、治療、治癒或預防任何疾病。效果因人而異。</p>
