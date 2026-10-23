@@ -13,7 +13,12 @@ def _ver(path):
 CSS_VER = _ver('style.css'); JS_VER = _ver('main.js')
 DIST = os.path.dirname(ROOT)  # repo 根目錄
 SHOP = 'https://zh.uhealthfit.com/zh-hant-us'  # 強制美國市場（USD）；根路徑預設為 EUR 市場
-SITE_URL = 'https://toniachu2026.github.io/uhealthfit-zh'  # GitHub Pages 網址；綁自訂網域後改這一行重建
+SITE_URL = 'https://uhealthfit-zh.pages.dev'  # Cloudflare Pages 網址；綁自訂網域後改這一行重建
+def page_url(path):
+    # Cloudflare Pages 的乾淨網址：index.html → 資料夾網址（/、/blog/），其他 .html 去掉副檔名（會 308 轉址到這裡）
+    if path.endswith('index.html'): path=path[:-len('index.html')]
+    elif path.endswith('.html'): path=path[:-len('.html')]
+    return f'{SITE_URL}/{path}'
 IMG = 'https://uhealthfit.com'
 LOGO = f'{IMG}/uhealthfit/uhealthfit_zh_logo.svg'  # 導覽列：優健堂（同 uhealthfit.com/zh-TW）
 LOGO_WHITE = 'img/uhealthfit-logo-white.svg'  # 頁尾：UHealthFit 白色字標（同 zh.uhealthfit.com 商店頁首）
@@ -470,7 +475,7 @@ def head(title, desc, rel, canonical_path, page_id, og_image=None, extra=''):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
-<link rel="canonical" href="{SITE_URL}/{canonical_path}">
+<link rel="canonical" href="{page_url(canonical_path)}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
@@ -788,7 +793,7 @@ def build_products():
         yes=''.join(f'<li>{esc(x)}</li>' for x in p['yes']); no=''.join(f'<li>{esc(x)}</li>' for x in p['no'])
         posts=[q for q in POSTS if q['series']==p['series']]
         pr=price_str(p, with_compare=True)
-        ld=json.dumps({"@context":"https://schema.org","@type":"Product","name":p['name'],"image":p['image'],"description":p['desc'],"brand":{"@type":"Brand","name":"WiseQuest"},"url":f"{SITE_URL}/products/{slug}.html","offers":{"@type":"Offer","priceCurrency":"USD","price":str(p['price']) if p['price'] else "0","availability":"https://schema.org/OutOfStock" if p.get('oos') else "https://schema.org/InStock","url":url}},ensure_ascii=False) if not p.get('is_bundle') else ''
+        ld=json.dumps({"@context":"https://schema.org","@type":"Product","name":p['name'],"image":p['image'],"description":p['desc'],"brand":{"@type":"Brand","name":"WiseQuest"},"url":page_url(f"products/{slug}.html"),"offers":{"@type":"Offer","priceCurrency":"USD","price":str(p['price']) if p['price'] else "0","availability":"https://schema.org/OutOfStock" if p.get('oos') else "https://schema.org/InStock","url":url}},ensure_ascii=False) if not p.get('is_bundle') else ''
         body=f'''
 <section class="pdp"><div class="wrap">
   <div class="gallery"><img src="{p['image']}" alt="{esc(p['name'])}" width="800" height="800" fetchpriority="high"></div>
@@ -1009,7 +1014,7 @@ def build_faq():
 
 def build_misc():
     pages=['index.html','about.html','faq.html','quiz.html','blog/index.html']+[f'series/{k}.html' for k in SERIES_ORDER]+[f'products/{s}.html' for s in PRODUCT_ORDER]+[f'blog/{p["slug"]}.html' for p in POSTS]
-    sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>{SITE_URL}/{p}</loc><lastmod>{TODAY}</lastmod></url>\n' for p in pages)+'</urlset>\n'
+    sm='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>{page_url(p)}</loc><lastmod>{TODAY}</lastmod></url>\n' for p in pages)+'</urlset>\n'
     write('sitemap.xml', sm)
     write('robots.txt', f'User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n')
     shutil.copy(os.path.join(ROOT,'src','style.css'), os.path.join(DIST,'css','style.css')) if os.path.isdir(os.path.join(DIST,'css')) else (os.makedirs(os.path.join(DIST,'css')), shutil.copy(os.path.join(ROOT,'src','style.css'), os.path.join(DIST,'css','style.css')))
@@ -1025,7 +1030,7 @@ def build_misc():
 - css/style.css、js/main.js 共用 ｜ sitemap.xml、robots.txt
 
 ## 部署
-GitHub Pages：Settings → Pages → Deploy from a branch → main / (root)。網址 https://toniachu2026.github.io/uhealthfit-zh/，綁自訂網域後改 build-src/build.py 的 SITE_URL 重建。\n\n## 怎麼改網站\n不要直接改根目錄的 HTML（34 頁會不同步）。改 `build-src/` 裡的資料與模板，然後在 repo 根目錄執行 `python3 build-src/build.py`，再 commit & push：\n- 產品、系列、FAQ、測驗題目：`build-src/build.py` 上半部的 SERIES / PRODUCTS / QUIZ / FAQS\n- 導購文章：`build-src/posts/<slug>.html`（第一行 JSON meta → `---END-META---` → HTML 片段）；新增文章請加入 build.py 的 POST_ORDER\n- 樣式／互動：`build-src/src/style.css`、`build-src/src/main.js`\n- 文案合規規範：`build-src/BRIEF.md`
+Cloudflare Pages：連結 GitHub repo 的 main 分支，push 後自動部署。網址 https://uhealthfit-zh.pages.dev/，綁自訂網域後改 build-src/build.py 的 SITE_URL 重建。Cloudflare 會把 .html 網址 308 轉址成乾淨網址（/about、/products/calmoon、/blog/），標準網址、sitemap 與結構化資料都已使用乾淨網址（build.py 的 page_url）。GitHub Pages 已不再使用。\n\n## 怎麼改網站\n不要直接改根目錄的 HTML（34 頁會不同步）。改 `build-src/` 裡的資料與模板，然後在 repo 根目錄執行 `python3 build-src/build.py`，再 commit & push：\n- 產品、系列、FAQ、測驗題目：`build-src/build.py` 上半部的 SERIES / PRODUCTS / QUIZ / FAQS\n- 導購文章：`build-src/posts/<slug>.html`（第一行 JSON meta → `---END-META---` → HTML 片段）；新增文章請加入 build.py 的 POST_ORDER\n- 樣式／互動：`build-src/src/style.css`、`build-src/src/main.js`\n- 文案合規規範：`build-src/BRIEF.md`
 - Logo 與圖片：導覽列用 uhealthfit.com 的優健堂 SVG（LOGO）、頁尾用 zh.uhealthfit.com 商店頁首的 UHealthFit 白色字標（`build-src/src/img/`）；六大系列情境照與產品實拍取自 zh.uhealthfit.com（Shopify CDN，見 build.py 的 SHOP_CDN／shop_img，`&width=` 可調尺寸），其餘產品圖取自 uhealthfit.com
 上線前：
 1. 綁自訂網域後，把 build-src/build.py 的 SITE_URL 改成正式網域並重建；

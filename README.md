@@ -7,7 +7,7 @@
 - css/style.css、js/main.js 共用 ｜ sitemap.xml、robots.txt
 
 ## 部署
-GitHub Pages：Settings → Pages → Deploy from a branch → main / (root)。網址 https://toniachu2026.github.io/uhealthfit-zh/，綁自訂網域後改 build-src/build.py 的 SITE_URL 重建。
+Cloudflare Pages：連結 GitHub repo 的 main 分支，push 後自動部署。網址 https://uhealthfit-zh.pages.dev/，綁自訂網域後改 build-src/build.py 的 SITE_URL 重建。Cloudflare 會把 .html 網址 308 轉址成乾淨網址（/about、/products/calmoon、/blog/），標準網址、sitemap 與結構化資料都已使用乾淨網址（build.py 的 page_url）。GitHub Pages 已不再使用。
 
 ## 怎麼改網站
 不要直接改根目錄的 HTML（34 頁會不同步）。改 `build-src/` 裡的資料與模板，然後在 repo 根目錄執行 `python3 build-src/build.py`，再 commit & push：
