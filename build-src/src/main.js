@@ -4,22 +4,40 @@
   var mb=document.querySelector('.menu-btn'), mm=document.querySelector('.mobile-menu');
   if(mb&&mm){mb.addEventListener('click',function(){var o=mm.classList.toggle('open');mb.setAttribute('aria-expanded',o?'true':'false');});}
 
-  // 外站購買連結：加上 UTM、記錄事件（GA4 / Meta Pixel 若存在）
+  // 外站購買連結：沿用廣告來源參數、記錄事件（GA4 / Meta Pixel 若存在）
+  // 訪客若從廣告或帶 UTM 的連結進站，把來源參數與點擊編號存在本次瀏覽，
+  // 前往商店時原樣帶過去，讓 Shopify、GA4、Meta、Google Ads 能把訂單歸回原本的廣告。
+  // 沒有廣告來源時，才標記為 uhealthfit-site / referral（本站導購）。
   var page=document.body.getAttribute('data-page')||'site';
+  var AD_KEYS=['utm_source','utm_medium','utm_campaign','utm_content','utm_term','utm_id','fbclid','gclid','gbraid','wbraid','msclkid','ttclid'];
+  var adParams={};
+  try{
+    var q=new URLSearchParams(location.search), fresh={}, hasFresh=false;
+    AD_KEYS.forEach(function(k){var v=q.get(k); if(v){fresh[k]=v; hasFresh=true;}});
+    if(hasFresh){ sessionStorage.setItem('uhf_ad_params',JSON.stringify(fresh)); adParams=fresh; }
+    else { adParams=JSON.parse(sessionStorage.getItem('uhf_ad_params')||'{}')||{}; }
+  }catch(e){ adParams={}; }
+  function shopHref(href){
+    var u=new URL(href), keys=Object.keys(adParams);
+    if(keys.length){
+      AD_KEYS.forEach(function(k){u.searchParams.delete(k);});
+      keys.forEach(function(k){u.searchParams.set(k,adParams[k]);});
+    } else if(!u.searchParams.get('utm_source')){
+      u.searchParams.set('utm_source','uhealthfit-site');
+      u.searchParams.set('utm_medium','referral');
+      u.searchParams.set('utm_campaign',page);
+    }
+    return u.toString();
+  }
   document.querySelectorAll('a[href^="https://zh.uhealthfit.com"]').forEach(function(a){
     try{
-      var u=new URL(a.href);
-      if(!u.searchParams.get('utm_source')){
-        u.searchParams.set('utm_source','uhealthfit-site');
-        u.searchParams.set('utm_medium','referral');
-        u.searchParams.set('utm_campaign',page);
-        a.href=u.toString();
-      }
+      a.href=shopHref(a.href);
       a.setAttribute('rel','noopener'); a.setAttribute('target','_blank'); // 另開新分頁，保留本站
       a.addEventListener('click',function(){
         var label=a.getAttribute('data-product')||page;
         if(window.gtag){gtag('event','begin_checkout_redirect',{product:label,page:page});}
-        if(window.fbq){fbq('trackCustom','ShopRedirect',{product:label,page:page});}
+        // Meta 只收到「前往商店」這個動作，不帶產品或頁面名稱，避免被視為健康相關資料
+        if(window.fbq){fbq('trackCustom','ShopRedirect');}
       });
     }catch(e){}
   });
@@ -94,7 +112,7 @@
           fetch('https://a.klaviyo.com/client/events/?company_id='+encodeURIComponent(company),{method:'POST',headers:{'Content-Type':'application/json','revision':'2024-10-15'},body:JSON.stringify(ev)}).catch(function(){});
         }
         if(window.gtag){gtag('event','generate_lead',{method:'quiz_email',lead_magnet:lmKey||'none'});}
-        if(window.fbq){fbq('track','Lead',{content_name:lmKey||'quiz_email'});}
+        if(window.fbq){fbq('track','Lead');} // 不傳電子書類別給 Meta，類別只留在 GA4 與 Klaviyo
       }
     });
   }
